@@ -52,7 +52,7 @@
   .data-cell{background:var(--bg2);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.3rem;opacity:0;transform:translateY(10px);transition:all .4s}
   .data-cell.visible{opacity:1;transform:translateY(0)}
   .data-cell:hover{background:var(--dim)}
-  .data-key{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);letter-spacing:.08em}
+  .data-key{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);letter-spacing:.08em}
   .data-val{font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--green);text-shadow:var(--glow-green)}
 
   /* EQ BLOCK */
@@ -110,7 +110,7 @@
 <canvas id="bg-canvas"></canvas>
 
 <nav id="nav-dots">
-  <div class="nav-dot active" data-label="Given Data"       onclick="goTo('given')"></div>
+  <div class="nav-dot active" data-label="Given Data"        onclick="goTo('given')"></div>
   <div class="nav-dot"        data-label="(a)(b) Balances"  onclick="goTo('part-a')"></div>
   <div class="nav-dot"        data-label="(c) Equilibrium"  onclick="goTo('part-c')"></div>
   <div class="nav-dot"        data-label="(d) Energy Params" onclick="goTo('part-d')"></div>
@@ -119,19 +119,17 @@
   <div class="nav-dot"        data-label="(g) Isothermal Q" onclick="goTo('part-g')"></div>
 </nav>
 
-<!-- ═══════ HERO ═══════ -->
 <section id="hero">
   <p class="hero-label">Chemical Reaction Engineering · Problem No. 8</p>
   <h1 class="hero-title">Packed Bed Reactor<br/>Non-Isothermal Analysis</h1>
   <div class="hero-reaction">A + B &rightleftharpoons; 2C</div>
   <p class="hero-sub">
     \(F_{A0}=5\;\text{mol/s}\) &nbsp;|&nbsp; \(T_{in}=325\;\text{K}\) &nbsp;|&nbsp; \(T_{coolant}=300\;\text{K}\)<br/>
-    \(k=0.002\;\text{dm}^3\!\cdot\!\text{kg}^{-1}\!\cdot\!\text{mol}^{-1}\!\cdot\!\text{s}^{-1}\) @ 300 K &nbsp;|&nbsp; \(k_c=1000\) @ 305 K
+    \(k=0.002\;\text{dm}^3\!\cdot\!\text{kg}^{-1}\!\cdot\!\text{mol}^{-1}\!\cdot\!\text{s}^{-1}\) @ 300 K &nbsp;|&nbsp; \(K_C=1000\) @ 305 K
   </p>
   <div class="scroll-hint">SCROLL</div>
 </section>
 
-<!-- ═══════ GIVEN ═══════ -->
 <section id="given">
   <div class="container">
     <div class="section-header">
@@ -139,26 +137,25 @@
       <span class="section-title">Problem Data</span>
     </div>
     <div class="data-grid">
-      <div class="data-cell"><span class="data-key">F_A0</span><span class="data-val">\(5\;\text{mol/s}\)</span></div>
-      <div class="data-cell"><span class="data-key">F_B0 = 2·F_A0</span><span class="data-val">\(10\;\text{mol/s}\)</span></div>
-      <div class="data-cell"><span class="data-key">F_I0 = F_B0</span><span class="data-val">\(10\;\text{mol/s}\)</span></div>
-      <div class="data-cell"><span class="data-key">T_in</span><span class="data-val">\(325\;\text{K}\)</span></div>
-      <div class="data-cell"><span class="data-key">T_coolant</span><span class="data-val">\(300\;\text{K}\)</span></div>
-      <div class="data-cell"><span class="data-key">Cp_A = Cp_B = Cp_C</span><span class="data-val">\(20\;\text{cal/mol·K}\)</span></div>
-      <div class="data-cell"><span class="data-key">Cp_I</span><span class="data-val">\(18\;\text{cal/mol·K}\)</span></div>
-      <div class="data-cell"><span class="data-key">E (Activation Energy)</span><span class="data-val">\(25\;\text{kcal/mol}\)</span></div>
-      <div class="data-cell"><span class="data-key">ΔH_Rx @ 298 K</span><span class="data-val">\(-20\;\text{kcal/mol}\)</span></div>
-      <div class="data-cell"><span class="data-key">ṁ_c (coolant flow)</span><span class="data-val">\(18\;\text{mol/s}\)</span></div>
-      <div class="data-cell"><span class="data-key">k @ 300 K</span><span class="data-val">\(0.002\;\text{dm}^3\!\cdot\!\text{kg}^{-1}\!\cdot\!\text{mol}^{-1}\!\cdot\!\text{s}^{-1}\)</span></div>
-      <div class="data-cell"><span class="data-key">α (Ergun parameter)</span><span class="data-val">\(0.00015\;\text{kg}^{-1}\)</span></div>
-      <div class="data-cell"><span class="data-key">Ua (heat transfer coeff.)</span><span class="data-val">\(320\;\text{cal/s·m}^2\text{·K}\)</span></div>
-      <div class="data-cell"><span class="data-key">Cp_coolant</span><span class="data-val">\(18\;\text{cal/mol·K}\)</span></div>
-      <div class="data-cell"><span class="data-key">k_c @ 305 K</span><span class="data-val">\(1000\)</span></div>
+      <div class="data-cell"><span class="data-key">\(F_{A0}\)</span><span class="data-val">\(5\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(F_{B0} = 2F_{A0}\)</span><span class="data-val">\(10\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(F_{I0} = F_{B0}\)</span><span class="data-val">\(10\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(T_{in}\)</span><span class="data-val">\(325\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(T_{coolant}\)</span><span class="data-val">\(300\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(C_{P_A} = C_{P_B} = C_{P_C}\)</span><span class="data-val">\(20\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(C_{P_I}\)</span><span class="data-val">\(18\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(E\) (Activation Energy)</span><span class="data-val">\(25\;\text{kcal/mol}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(\Delta H_{Rx}^\circ\) @ 298 K</span><span class="data-val">\(-20\;\text{kcal/mol}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(\dot{m}_c\) (coolant flow)</span><span class="data-val">\(18\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(k\) @ 300 K</span><span class="data-val">\(0.002\;\text{dm}^3\!\cdot\!\text{kg}^{-1}\!\cdot\!\text{mol}^{-1}\!\cdot\!\text{s}^{-1}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(\alpha\) (Ergun parameter)</span><span class="data-val">\(0.00015\;\text{kg}^{-1}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(U_a\) (heat transfer coeff.)</span><span class="data-val">\(320\;\text{cal/s·m}^2\text{·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(C_{P_{cool}}\)</span><span class="data-val">\(18\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(K_C\) @ 305 K</span><span class="data-val">\(1000\)</span></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ PART A & B ═══════ -->
 <section id="part-a">
   <div class="container">
     <div class="section-header">
@@ -170,7 +167,7 @@
     <div class="eq-block">$$\frac{dX}{dW} = \frac{-r'_A}{F_{A0}}$$</div>
 
     <p class="prose">Rate law for this elementary reversible reaction \(A + B \rightleftharpoons 2C\):</p>
-    <div class="eq-block green">$$-r'_A = k(T)\left[C_A \cdot C_B - \frac{C_C^2}{k_c(T)}\right]$$</div>
+    <div class="eq-block green">$$-r'_A = k(T)\left[C_A \cdot C_B - \frac{C_C^2}{K_C(T)}\right]$$</div>
 
     <p class="prose">From \(A + B \rightleftharpoons 2C\): stoichiometric coefficients \(a=1,\; b=1,\; c=2\)</p>
     <div class="divider"></div>
@@ -191,18 +188,17 @@ $$C_C = C_{A0}(2X)\,P\!\left(\frac{T_0}{T}\right)$$
 
     <p class="prose">Substituting all concentrations into the rate law:</p>
     <div class="eq-block amber">
-$$-r'_A = k(T)\,C_{A0}^2\left[(1-X)(2-X) - \frac{4X^2}{k_c(T)}\right]P^2\!\left(\frac{T_0}{T}\right)^{\!2}$$
+$$-r'_A = k(T)\,C_{A0}^2\left[(1-X)(2-X) - \frac{4X^2}{K_C(T)}\right]P^2\!\left(\frac{T_0}{T}\right)^{\!2}$$
     </div>
 
     <p class="prose">Temperature-dependent rate constants via Arrhenius and van't Hoff:</p>
     <div class="eq-block">
 $$k(T) = 0.0002\exp\!\left[\frac{25{,}000}{1.987}\!\left(\frac{1}{300}-\frac{1}{T}\right)\right]$$
-$$k_c(T) = 1000\exp\!\left[\frac{-20{,}000}{1.987}\!\left(\frac{1}{305}-\frac{1}{T}\right)\right]$$
+$$K_C(T) = 1000\exp\!\left[\frac{-20{,}000}{1.987}\!\left(\frac{1}{305}-\frac{1}{T}\right)\right]$$
     </div>
   </div>
 </section>
 
-<!-- ═══════ PART C ═══════ -->
 <section id="part-c">
   <div class="container">
     <div class="section-header">
@@ -211,17 +207,17 @@ $$k_c(T) = 1000\exp\!\left[\frac{-20{,}000}{1.987}\!\left(\frac{1}{305}-\frac{1}
     </div>
 
     <p class="prose">At equilibrium, \(-r'_A \to 0\), so the bracketed term equals zero:</p>
-    <div class="eq-block green">$$\left(1-X_e\right)\!\left(2-X_e\right) - \frac{4X_e^2}{k_c(T)} = 0$$</div>
+    <div class="eq-block green">$$\left(1-X_e\right)\!\left(2-X_e\right) - \frac{4X_e^2}{K_C(T)} = 0$$</div>
 
-    <p class="prose">Expanding and rearranging, then multiplying through by \(\dfrac{k_c}{4}\):</p>
+    <p class="prose">Expanding and rearranging, then multiplying through by \(\dfrac{K_C}{4}\):</p>
     <div class="eq-block">
-$$2 - 3X_e + X_e^2 - \frac{4X_e^2}{k_c} = 0 \qquad \times\frac{k_c}{4}$$
-$$\left(\frac{k_c}{4}-1\right)X_e^2 - \frac{3k_c}{4}\,X_e + \frac{k_c}{2} = 0$$
+$$2 - 3X_e + X_e^2 - \frac{4X_e^2}{K_C} = 0 \qquad \bigg| \times\frac{K_C}{4}$$
+$$\left(\frac{K_C}{4}-1\right)X_e^2 - \frac{3K_C}{4}\,X_e + \frac{K_C}{2} = 0$$
     </div>
 
-    <p class="prose">Applying the quadratic formula, with \(a = \dfrac{k_c}{4}-1\), \(b = -\dfrac{3k_c}{4}\), \(c = \dfrac{k_c}{2}\):</p>
+    <p class="prose">Applying the quadratic formula, with \(a = \dfrac{K_C}{4}-1\), \(b = -\dfrac{3K_C}{4}\), \(c = \dfrac{K_C}{2}\):</p>
     <div class="eq-block amber">
-$$X_e = \frac{\dfrac{3k_c}{4} \pm \sqrt{\left(\dfrac{3k_c}{4}\right)^{\!2} - 2k_c\!\left(\dfrac{k_c}{4}-1\right)}}{2\!\left(\dfrac{k_c}{4}-1\right)}$$
+$$X_e = \frac{\dfrac{3K_C}{4} \pm \sqrt{\left(\dfrac{3K_C}{4}\right)^{\!2} - 2K_C\!\left(\dfrac{K_C}{4}-1\right)}}{2\!\left(\dfrac{K_C}{4}-1\right)}$$
     </div>
 
     <div class="chart-wrap">
@@ -229,17 +225,16 @@ $$X_e = \frac{\dfrac{3k_c}{4} \pm \sqrt{\left(\dfrac{3k_c}{4}\right)^{\!2} - 2k_
       <canvas id="chart-xe" height="300"></canvas>
     </div>
 
-    <p class="prose">Data table — \(T\,(\text{K})\), \(k_c(T)\), \(X_e\):</p>
+    <p class="prose">Data table — \(T\,(\text{K})\), \(K_C(T)\), \(X_e\):</p>
     <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);">
       <table class="data-table">
-        <thead><tr><th>T (K)</th><th>k_c(T)</th><th>X_e</th></tr></thead>
+        <thead><tr><th>T (K)</th><th>K_C(T)</th><th>X_e</th></tr></thead>
         <tbody id="xe-tbody"></tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- ═══════ PART D ═══════ -->
 <section id="part-d">
   <div class="container">
     <div class="section-header">
@@ -249,25 +244,24 @@ $$X_e = \frac{\dfrac{3k_c}{4} \pm \sqrt{\left(\dfrac{3k_c}{4}\right)^{\!2} - 2k_
 
     <p class="prose">Sum of heat capacities (feed basis):</p>
     <div class="eq-block">
-$$\sum\Theta_i C_{p_i} = C_{p_A} + \Theta_B C_{p_B} + \Theta_I C_{p_I} = 20 + 2(20) + 2(18) = \mathbf{96}\;\text{cal/mol·K}$$
+$$\sum\Theta_i C_{P_i} = C_{P_A} + \Theta_B C_{P_B} + \Theta_I C_{P_I} = 20 + 2(20) + 2(18) = \mathbf{96}\;\text{cal/mol·K}$$
     </div>
 
     <div class="eq-block" style="border-color:var(--cyan);color:var(--cyan)">
-$$\Delta C_p = 2C_{p_C} - C_{p_A} - C_{p_B} = 2(20)-(20+20) = \mathbf{0} \quad \leftarrow \text{convenient!}$$
+$$\Delta C_P = 2C_{P_C} - C_{P_A} - C_{P_B} = 2(20)-(20+20) = \mathbf{0} \quad \leftarrow \text{convenient!}$$
     </div>
 
     <div class="data-grid" style="margin-top:1rem">
-      <div class="data-cell"><span class="data-key">T₀ (inlet)</span><span class="data-val">\(325\;\text{K}\)</span></div>
-      <div class="data-cell"><span class="data-key">T₁ (ref. for k)</span><span class="data-val">\(300\;\text{K}\)</span></div>
-      <div class="data-cell"><span class="data-key">T₂ (ref. for k_c)</span><span class="data-val">\(305\;\text{K}\)</span></div>
-      <div class="data-cell"><span class="data-key">ΣΘᵢCpᵢ</span><span class="data-val">\(96\;\text{cal/mol·K}\)</span></div>
-      <div class="data-cell"><span class="data-key">ΔCp</span><span class="data-val">\(0\;\text{cal/mol·K}\)</span></div>
-      <div class="data-cell"><span class="data-key">−ΔH_Rx</span><span class="data-val">\(+20{,}000\;\text{cal/mol}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(T_0\) (inlet)</span><span class="data-val">\(325\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(T_1\) (ref. for k)</span><span class="data-val">\(300\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(T_2\) (ref. for \(K_C\))</span><span class="data-val">\(305\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(\Sigma\Theta_i C_{P_i}\)</span><span class="data-val">\(96\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(\Delta C_P\)</span><span class="data-val">\(0\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">\(-\Delta H_{Rx}^\circ\)</span><span class="data-val">\(+20{,}000\;\text{cal/mol}\)</span></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ PART E ═══════ -->
 <section id="part-e">
   <div class="container">
     <div class="section-header">
@@ -277,15 +271,15 @@ $$\Delta C_p = 2C_{p_C} - C_{p_A} - C_{p_B} = 2(20)-(20+20) = \mathbf{0} \quad \
 
     <p class="prose">General energy balance (non-adiabatic):</p>
     <div class="eq-block">
-$$T = T_0 + \frac{X\!\left[-\Delta H_{Rx}(T_r) + \Delta C_p(T_r - T_0)\right]}{\displaystyle\sum\Theta_i C_{p_i} + X\,\Delta C_p}$$
+$$T = T_0 + \frac{X\!\left[-\Delta H_{Rx}^\circ(T_R) + \Delta C_P(T - T_0)\right]}{\displaystyle\sum\Theta_i C_{P_i} + X\,\Delta C_P}$$
     </div>
 
-    <p class="prose">Since \(\Delta C_p = 0\), the adiabatic energy balance simplifies to:</p>
+    <p class="prose">Since \(\Delta C_P = 0\), the adiabatic energy balance simplifies to:</p>
     <div class="eq-block green">
-$$T = T_0 + \frac{X\,(-\Delta H_{Rx})}{\displaystyle\sum\Theta_i C_{p_i}}$$
+$$T = T_0 + \frac{X\,(-\Delta H_{Rx}^\circ)}{\displaystyle\sum\Theta_i C_{P_i}}$$
     </div>
 
-    <p class="prose">Substituting values \(\bigl(T_0=325\;\text{K},\;{-\Delta H_{Rx}}=20{,}000\;\text{cal/mol},\;\sum\Theta_i C_{p_i}=96\;\text{cal/mol·K}\bigr)\):</p>
+    <p class="prose">Substituting values \(\bigl(T_0=325\;\text{K},\;{-\Delta H_{Rx}^\circ}=20{,}000\;\text{cal/mol},\;\sum\Theta_i C_{P_i}=96\;\text{cal/mol·K}\bigr)\):</p>
     <div class="eq-block amber">
 $$T = 325 + \frac{20{,}000}{96}\,X \;=\; 325 + 208.33\,X$$
     </div>
@@ -297,7 +291,6 @@ $$T = 325 + \frac{20{,}000}{96}\,X \;=\; 325 + 208.33\,X$$
   </div>
 </section>
 
-<!-- ═══════ PART F ═══════ -->
 <section id="part-f">
   <div class="container">
     <div class="section-header">
@@ -330,7 +323,6 @@ T  = 325.0 + 208.33 * X
 Kc = 1000 * np.exp((-20000 / R) * (1/305 - 1/T))
 Xe = (0.75*Kc - np.sqrt((0.75*Kc)**2 - 2*Kc*(0.25*Kc - 1))) / (2*(0.25*Kc - 1))</div>
 
-    <!-- 3 separate plot cards -->
     <div class="plots-grid">
       <div class="plot-card">
         <div class="plot-label">Plot 1 — Conversion Profiles down the PBR</div>
@@ -350,12 +342,11 @@ Xe = (0.75*Kc - np.sqrt((0.75*Kc)**2 - 2*Kc*(0.25*Kc - 1))) / (2*(0.25*Kc - 1))<
       <strong style="color:var(--text)">Analysis:</strong>
       <em>Pressure profile:</em> Because \(T\) is rising (gas expands and flows faster), the pressure drop actually accelerates slightly as the bed moves down.
       <em>Temperature profile:</em> Starts rising rapidly above \(T_0\) since the reaction is fast at the entrance. As the reaction slows down it will flatten out (stagnant).
-      <em>Conversion (X and \(X_e\)):</em> Actual \(X\) starts at 0 and rises upward. At the same time, because temp. is rising, the \(X_e\) starts high and drops downwards. The intersected line is the absolute max. \(X\) the adiabatic reactor could achieve.
+      <em>Conversion (\(X\) and \(X_e\)):</em> Actual \(X\) starts at 0 and rises upward. At the same time, because temp. is rising, the \(X_e\) starts high and drops downwards. The intersected line is the absolute max. \(X\) the adiabatic reactor could achieve.
     </p>
   </div>
 </section>
 
-<!-- ═══════ PART G ═══════ -->
 <section id="part-g">
   <div class="container">
     <div class="section-header">
@@ -365,11 +356,11 @@ Xe = (0.75*Kc - np.sqrt((0.75*Kc)**2 - 2*Kc*(0.25*Kc - 1))) / (2*(0.25*Kc - 1))<
 
     <p class="prose">To maintain isothermal operation, the heat removed by cooling jacket must perfectly match the heat generated by the reaction at every single point down the reactor.</p>
 
-    <div class="eq-block amber">$$\text{Local Heat Generated} = (-r'_A)(-\Delta H_{Rx})$$</div>
+    <div class="eq-block amber">$$\text{Local Heat Generated} = (-r'_A)(-\Delta H_{Rx}^\circ)$$</div>
 
     <p class="prose">To find the cumulative heat removed \(\dot{Q}\) as the reactor moves down, set a new differential equation to add up that heat along the catalyst weight \(W\):</p>
     <div class="eq-block green">
-$$\frac{d\dot{Q}}{dW} = (-r'_A)(-\Delta H_{Rx}) = 20{,}000\;\frac{\text{cal}}{\text{mol}}\cdot(-r'_A)$$
+$$\frac{d\dot{Q}}{dW} = (-r'_A)(-\Delta H_{Rx}^\circ) = 20{,}000\;\frac{\text{cal}}{\text{mol}}\cdot(-r'_A)$$
     </div>
 
     <p class="prose">To find volume \(V\), where \(W = \rho_b\,V\) with \(\rho_b = 1.4\;\text{kg/dm}^3\):</p>
@@ -454,10 +445,6 @@ function updateNavDots(){
 
 // ─── SCROLL REVEAL ──────────────────────────────────────────────────────────────
 const revealEls=document.querySelectorAll('.data-cell,.eq-block,.prose,.chart-wrap,.code-block,.plot-card');
-new IntersectionObserver((entries)=>{
-  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*55);});
-},{threshold:.08}).observe;
-// use forEach properly
 const obs=new IntersectionObserver((entries)=>{
   entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*55);});
 },{threshold:.08});
@@ -517,13 +504,6 @@ new Chart(document.getElementById('chart-adiabatic').getContext('2d'),{
 });
 
 // ─── ODE SOLVER — EXACT PYTHON LOGIC (Euler, 8000 steps for accuracy) ──────────
-// Mirrors pbr_model(W, y) exactly:
-// T = 325.0 + 208.33 * X
-// k = 0.0002 * exp((25000/R)*(1/300 - 1/T))
-// Kc = 1000 * exp((-20000/R)*(1/305 - 1/T))
-// ra = k*(Ca0^2)*((1-X)*(2-X) - (4*X^2)/Kc)*(p^2)*((T0/T)^2)
-// dXdW = ra/Fa0
-// dpdW = -alpha*(T/T0)/(2*p)
 function solvePBR(steps,Wmax){
   const dW=Wmax/steps;
   let X=0,p=1;
@@ -541,9 +521,6 @@ function solvePBR(steps,Wmax){
   return{Ws,Xs,ps,Ts,Xes};
 }
 
-// Mirrors isothermal_model(W, y) exactly:
-// ra = k*(Ca0^2)*((1-X)*(2-X) - (4*X^2)/Kc)*(p^2)  [T=T0 so T0/T=1]
-// dXdW = ra/Fa0 ; dpdW = -alpha/(2*p) ; dQdW = ra*(-delta_H) = ra*20000
 function solveIsothermal(steps,Wmax){
   const dW=Wmax/steps;
   const kIso=kFn(T0), KcIso=kcFn(T0);
@@ -566,7 +543,7 @@ function ds(arr,n=300){const s=Math.max(1,Math.floor(arr.length/n));return arr.f
 
 const Wds=ds(sol.Ws),Xds=ds(sol.Xs),pds=ds(sol.ps),Tds=ds(sol.Ts),Xeds=ds(sol.Xes);
 
-// ─── PLOT 1: Conversion (X blue, Xe red-dashed) — mirrors ax1 ───────────────────
+// ─── PLOT 1: Conversion (X blue, Xe red-dashed) ─────────────────────────────────
 new Chart(document.getElementById('plot-conv').getContext('2d'),{
   type:'line',
   data:{labels:Wds.map(w=>w.toFixed(0)),datasets:[
@@ -581,7 +558,7 @@ new Chart(document.getElementById('plot-conv').getContext('2d'),{
     }}
 });
 
-// ─── PLOT 2: Temperature (black solid) — mirrors ax2 ────────────────────────────
+// ─── PLOT 2: Temperature (solid line) ───────────────────────────────────────────
 new Chart(document.getElementById('plot-temp').getContext('2d'),{
   type:'line',
   data:{labels:Wds.map(w=>w.toFixed(0)),datasets:[
@@ -595,7 +572,7 @@ new Chart(document.getElementById('plot-temp').getContext('2d'),{
     }}
 });
 
-// ─── PLOT 3: Dimensionless Pressure (green dash-dot) — mirrors ax3 ──────────────
+// ─── PLOT 3: Dimensionless Pressure (green dash-dot) ────────────────────────────
 new Chart(document.getElementById('plot-press').getContext('2d'),{
   type:'line',
   data:{labels:Wds.map(w=>w.toFixed(0)),datasets:[
@@ -609,7 +586,7 @@ new Chart(document.getElementById('plot-press').getContext('2d'),{
     }}
 });
 
-// ─── CHART G: Q̇ (red) + X (blue-dashed) vs V — mirrors ax1 + ax2.twinx ─────────
+// ─── CHART G: Q̇ (red) + X (blue-dashed) vs V ────────────────────────────────────
 const rho_b=1.4;
 const Wiso=ds(solI.Ws,300),Xiso=ds(solI.Xs,300);
 const Qiso=ds(solI.Qs,300).map(q=>q/1000);
