@@ -4,405 +4,104 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>CRE — Problem No. 8 | A + B ⇌ 2C</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+  MathJax = {
+    tex: { inlineMath:[['\\(','\\)'],['$','$']], displayMath:[['\\[','\\]'],['$$','$$']] },
+    options: { skipHtmlTags:['script','noscript','style','textarea','pre'] },
+    startup: { typeset:false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 <style>
-  :root {
-    --bg: #080c10;
-    --bg2: #0d1117;
-    --green: #00ff88;
-    --cyan: #00d4ff;
-    --amber: #ffb300;
-    --red: #ff4757;
-    --dim: #1a2332;
-    --border: #1e3a4f;
-    --text: #c8d8e8;
-    --muted: #5a7a8a;
-    --glow-green: 0 0 10px #00ff8844, 0 0 30px #00ff8822;
-    --glow-cyan: 0 0 10px #00d4ff44, 0 0 30px #00d4ff22;
+  :root{
+    --bg:#080c10;--bg2:#0d1117;--green:#00ff88;--cyan:#00d4ff;
+    --amber:#ffb300;--red:#ff4757;--dim:#1a2332;--border:#1e3a4f;
+    --text:#c8d8e8;--muted:#5a7a8a;
+    --glow-green:0 0 10px #00ff8844,0 0 30px #00ff8822;
+    --glow-cyan:0 0 10px #00d4ff44,0 0 30px #00d4ff22;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    line-height: 1.7;
-  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.8}
+  #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.4}
+  body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+    pointer-events:none;z-index:1}
 
-  /* === CANVAS BG === */
-  #bg-canvas {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 0; pointer-events: none;
-    opacity: 0.4;
-  }
+  .container{max-width:980px;margin:0 auto;padding:0 2rem;position:relative;z-index:2}
 
-  /* === SCANLINES === */
-  body::before {
-    content: '';
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: repeating-linear-gradient(
-      0deg, transparent, transparent 2px,
-      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none; z-index: 1;
-  }
+  /* HERO */
+  #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:2;padding:4rem 2rem}
+  .hero-label{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .3s forwards}
+  .hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;color:#fff;letter-spacing:.05em;line-height:1.1;opacity:0;animation:fadeUp .8s .5s forwards}
+  .hero-reaction{font-family:'Share Tech Mono',monospace;font-size:clamp(1.5rem,4vw,2.6rem);color:var(--green);text-shadow:var(--glow-green);margin:2rem 0;opacity:0;animation:fadeUp .8s .7s forwards,glow-pulse 3s 1.5s infinite}
+  .hero-sub{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--muted);letter-spacing:.08em;opacity:0;animation:fadeUp .8s .9s forwards;line-height:2.2}
+  .scroll-hint{position:absolute;bottom:2rem;font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.2em;animation:bounce 2s infinite}
+  .scroll-hint::after{content:' ▼'}
 
-  /* === LAYOUT === */
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    position: relative; z-index: 2;
-  }
+  /* SECTIONS */
+  section{padding:5rem 0;position:relative;z-index:2;border-top:1px solid var(--border)}
+  .section-header{display:flex;align-items:center;gap:1rem;margin-bottom:2.5rem}
+  .section-tag{font-family:'Orbitron',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.25em;padding:.3rem .8rem;border:1px solid var(--cyan);color:var(--cyan);text-transform:uppercase}
+  .section-title{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:700;color:#fff}
 
-  /* === HERO === */
-  #hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    position: relative; z-index: 2;
-    padding: 4rem 2rem;
-  }
-  .hero-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .3em;
-    color: var(--cyan);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp .8s .3s forwards;
-  }
-  .hero-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.8rem, 5vw, 3.5rem);
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: .05em;
-    line-height: 1.1;
-    opacity: 0;
-    animation: fadeUp .8s .5s forwards;
-  }
-  .hero-reaction {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: clamp(1.4rem, 4vw, 2.8rem);
-    color: var(--green);
-    text-shadow: var(--glow-green);
-    margin: 2rem 0;
-    opacity: 0;
-    animation: fadeUp .8s .7s forwards, glow-pulse 3s 1.5s infinite;
-  }
-  .hero-sub {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .85rem;
-    color: var(--muted);
-    letter-spacing: .1em;
-    opacity: 0;
-    animation: fadeUp .8s .9s forwards;
-    line-height: 2;
-  }
-  .scroll-hint {
-    position: absolute; bottom: 2rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .7rem;
-    color: var(--muted);
-    letter-spacing: .2em;
-    animation: bounce 2s infinite;
-  }
-  .scroll-hint::after { content: ' ▼'; }
+  /* DATA GRID */
+  .data-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+  .data-cell{background:var(--bg2);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.3rem;opacity:0;transform:translateY(10px);transition:all .4s}
+  .data-cell.visible{opacity:1;transform:translateY(0)}
+  .data-cell:hover{background:var(--dim)}
+  .data-key{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);letter-spacing:.08em}
+  .data-val{font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--green);text-shadow:var(--glow-green)}
 
-  /* === SECTION === */
-  section {
-    padding: 5rem 0;
-    position: relative; z-index: 2;
-    border-top: 1px solid var(--border);
-  }
-  .section-header {
-    display: flex; align-items: center; gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
-  .section-tag {
-    font-family: 'Orbitron', sans-serif;
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .25em;
-    padding: .3rem .8rem;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    text-transform: uppercase;
-  }
-  .section-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: .05em;
-  }
+  /* EQ BLOCK */
+  .eq-block{background:var(--bg2);border-left:3px solid var(--cyan);padding:1.2rem 1.8rem;margin:1.1rem 0;color:var(--cyan);line-height:2.4;opacity:0;transform:translateX(-20px);transition:all .5s;overflow-x:auto}
+  .eq-block.visible{opacity:1;transform:translateX(0)}
+  .eq-block.amber{border-color:var(--amber);color:var(--amber)}
+  .eq-block.green{border-color:var(--green);color:var(--green)}
+  .eq-block mjx-container{color:inherit!important}
 
-  /* === GIVEN DATA GRID === */
-  .data-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-  .data-cell {
-    background: var(--bg2);
-    padding: 1rem 1.2rem;
-    display: flex; flex-direction: column; gap: .2rem;
-    opacity: 0; transform: translateY(10px);
-    transition: all .4s;
-  }
-  .data-cell.visible { opacity: 1; transform: translateY(0); }
-  .data-cell:hover { background: var(--dim); }
-  .data-key {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .7rem;
-    color: var(--muted);
-    letter-spacing: .1em;
-  }
-  .data-val {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1rem;
-    color: var(--green);
-    text-shadow: var(--glow-green);
-  }
+  /* PROSE */
+  .prose{font-size:.95rem;color:var(--text);line-height:1.9;margin:.9rem 0;opacity:0;transform:translateY(8px);transition:all .5s .1s}
+  .prose.visible{opacity:1;transform:translateY(0)}
 
-  /* === EQ BLOCK === */
-  .eq-block {
-    background: var(--bg2);
-    border-left: 3px solid var(--cyan);
-    padding: 1.2rem 1.5rem;
-    margin: 1.2rem 0;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1rem;
-    color: var(--cyan);
-    text-shadow: var(--glow-cyan);
-    opacity: 0; transform: translateX(-20px);
-    transition: all .5s;
-    line-height: 1.9;
-  }
-  .eq-block.visible { opacity: 1; transform: translateX(0); }
-  .eq-block.amber {
-    border-color: var(--amber);
-    color: var(--amber);
-    text-shadow: 0 0 10px #ffb30044;
-  }
-  .eq-block.green {
-    border-color: var(--green);
-    color: var(--green);
-    text-shadow: var(--glow-green);
-  }
+  /* CHART */
+  .chart-wrap{background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin:2rem 0;opacity:0;transform:scale(.97);transition:all .6s}
+  .chart-wrap.visible{opacity:1;transform:scale(1)}
+  .chart-title{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:1rem}
 
-  .prose {
-    font-size: .95rem;
-    color: var(--text);
-    line-height: 1.9;
-    margin: .8rem 0;
-    opacity: 0; transform: translateY(8px);
-    transition: all .5s .1s;
-  }
-  .prose.visible { opacity: 1; transform: translateY(0); }
+  /* TABLE */
+  .data-table{width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:.8rem;margin-top:.5rem}
+  .data-table th{background:var(--dim);color:var(--cyan);padding:.55rem 1rem;text-align:left;letter-spacing:.1em;border-bottom:1px solid var(--border)}
+  .data-table td{padding:.4rem 1rem;border-bottom:1px solid rgba(30,58,79,.4);color:var(--text);transition:background .2s}
+  .data-table tr:hover td{background:var(--dim)}
+  .data-table .highlight td{color:var(--green);text-shadow:var(--glow-green)}
 
-  /* === CHART CONTAINER === */
-  .chart-wrap {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    margin: 2rem 0;
-    opacity: 0; transform: scale(0.97);
-    transition: all .6s;
-  }
-  .chart-wrap.visible { opacity: 1; transform: scale(1); }
-  .chart-title {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .75rem;
-    color: var(--muted);
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
+  /* CODE */
+  .code-block{background:#050810;border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#7ec8a0;overflow-x:auto;line-height:1.85;opacity:0;transform:translateY(10px);transition:all .5s;white-space:pre}
+  .code-block.visible{opacity:1;transform:translateY(0)}
+  .code-comment{color:#2d5040}.code-key{color:var(--cyan)}.code-val{color:var(--amber)}
 
-  /* === TABLE === */
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .82rem;
-    margin-top: 1rem;
-  }
-  .data-table th {
-    background: var(--dim);
-    color: var(--cyan);
-    padding: .6rem 1rem;
-    text-align: left;
-    letter-spacing: .1em;
-    border-bottom: 1px solid var(--border);
-  }
-  .data-table td {
-    padding: .45rem 1rem;
-    border-bottom: 1px solid rgba(30,58,79,.4);
-    color: var(--text);
-    transition: background .2s;
-  }
-  .data-table tr:hover td { background: var(--dim); }
-  .data-table .highlight td { color: var(--green); text-shadow: var(--glow-green); }
+  /* PLOTS GRID — 3 equal columns */
+  .plots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+  @media(max-width:900px){.plots-grid{grid-template-columns:1fr}}
+  .plot-card{background:var(--bg2);border:1px solid var(--border);padding:1rem;opacity:0;transform:translateY(15px);transition:all .5s}
+  .plot-card.visible{opacity:1;transform:translateY(0)}
+  .plot-card:hover{border-color:var(--cyan)}
+  .plot-label{font-family:'Orbitron',sans-serif;font-size:.58rem;color:var(--cyan);letter-spacing:.2em;margin-bottom:.6rem;text-transform:uppercase}
 
-  /* === CODE BLOCK === */
-  .code-block {
-    background: #0a0f14;
-    border: 1px solid var(--border);
-    border-left: 3px solid #00ff88;
-    padding: 1.2rem 1.5rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .8rem;
-    color: #7ec8a0;
-    overflow-x: auto;
-    line-height: 1.8;
-    opacity: 0; transform: translateY(10px);
-    transition: all .5s;
-    white-space: pre;
-  }
-  .code-block.visible { opacity: 1; transform: translateY(0); }
-  .code-comment { color: #3a5a4a; }
-  .code-key { color: var(--cyan); }
-  .code-val { color: var(--amber); }
+  footer{text-align:center;padding:3rem 0;font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.15em;border-top:1px solid var(--border);position:relative;z-index:2}
+  #progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));z-index:999;width:0%;transition:width .1s;box-shadow:0 0 10px var(--cyan)}
+  #nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.8rem;z-index:100}
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .3s;position:relative}
+  .nav-dot.active{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .nav-dot:hover::after{content:attr(data-label);position:absolute;right:14px;top:-4px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--cyan);white-space:nowrap}
+  .divider{width:40px;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);margin:1.5rem 0}
 
-  /* === PROFILE SKETCHES === */
-  .sketches-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin: 1.5rem 0;
-  }
-  @media (max-width: 600px) { .sketches-grid { grid-template-columns: 1fr; } }
-  .sketch-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    padding: 1rem;
-    opacity: 0; transform: translateY(15px);
-    transition: all .5s;
-  }
-  .sketch-card.visible { opacity: 1; transform: translateY(0); }
-  .sketch-card:hover { border-color: var(--cyan); }
-  .sketch-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: .6rem;
-    color: var(--cyan);
-    letter-spacing: .2em;
-    margin-bottom: .5rem;
-    text-transform: uppercase;
-  }
-
-  /* === FOOTER === */
-  footer {
-    text-align: center;
-    padding: 3rem 0;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .7rem;
-    color: var(--muted);
-    letter-spacing: .15em;
-    border-top: 1px solid var(--border);
-    position: relative; z-index: 2;
-  }
-
-  /* === ANIMATIONS === */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes glow-pulse {
-    0%, 100% { text-shadow: 0 0 10px #00ff8844, 0 0 30px #00ff8822; }
-    50%       { text-shadow: 0 0 20px #00ff8888, 0 0 60px #00ff8844; }
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(8px); }
-  }
-  @keyframes type-in {
-    from { width: 0; }
-    to   { width: 100%; }
-  }
-
-  .typewriter {
-    overflow: hidden;
-    white-space: nowrap;
-    display: inline-block;
-    width: 0;
-    animation: type-in 1.5s steps(40,end) forwards;
-  }
-
-  /* Progress bar line at top */
-  #progress-bar {
-    position: fixed; top: 0; left: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cyan), var(--green));
-    z-index: 999;
-    width: 0%;
-    transition: width .1s;
-    box-shadow: 0 0 10px var(--cyan);
-  }
-
-  /* Nav dots */
-  #nav-dots {
-    position: fixed;
-    right: 1.5rem; top: 50%;
-    transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: .8rem;
-    z-index: 100;
-  }
-  .nav-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--border);
-    cursor: pointer;
-    transition: all .3s;
-    position: relative;
-  }
-  .nav-dot.active { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-  .nav-dot:hover::after {
-    content: attr(data-label);
-    position: absolute; right: 14px; top: -4px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .6rem;
-    color: var(--cyan);
-    white-space: nowrap;
-    letter-spacing: .05em;
-  }
-
-  .inline-note {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .78rem;
-    color: var(--muted);
-    margin: .3rem 0;
-    padding-left: 1rem;
-    border-left: 2px solid var(--border);
-  }
-
-  .tag-badge {
-    display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .65rem;
-    letter-spacing: .1em;
-    padding: .15rem .5rem;
-    border: 1px solid var(--green);
-    color: var(--green);
-    margin-right: .4rem;
-    margin-bottom: .3rem;
-  }
-
-  .divider {
-    width: 40px; height: 2px;
-    background: linear-gradient(90deg, var(--cyan), transparent);
-    margin: 1.5rem 0;
-  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes glow-pulse{0%,100%{text-shadow:0 0 10px #00ff8844,0 0 30px #00ff8822}50%{text-shadow:0 0 20px #00ff8888,0 0 60px #00ff8844}}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 </style>
 </head>
 <body>
@@ -411,29 +110,28 @@
 <canvas id="bg-canvas"></canvas>
 
 <nav id="nav-dots">
-  <div class="nav-dot active" data-label="Given Data" onclick="scrollTo('given')"></div>
-  <div class="nav-dot" data-label="(a) Mole Balance" onclick="scrollTo('part-a')"></div>
-  <div class="nav-dot" data-label="(b) Concentrations" onclick="scrollTo('part-b')"></div>
-  <div class="nav-dot" data-label="(c) Equilibrium" onclick="scrollTo('part-c')"></div>
-  <div class="nav-dot" data-label="(d) Energy Balance" onclick="scrollTo('part-d')"></div>
-  <div class="nav-dot" data-label="(e) Adiabatic" onclick="scrollTo('part-e')"></div>
-  <div class="nav-dot" data-label="(f) Pressure Drop" onclick="scrollTo('part-f')"></div>
-  <div class="nav-dot" data-label="(g) Isothermal Q" onclick="scrollTo('part-g')"></div>
+  <div class="nav-dot active" data-label="Given Data"       onclick="goTo('given')"></div>
+  <div class="nav-dot"        data-label="(a)(b) Balances"  onclick="goTo('part-a')"></div>
+  <div class="nav-dot"        data-label="(c) Equilibrium"  onclick="goTo('part-c')"></div>
+  <div class="nav-dot"        data-label="(d) Energy Params" onclick="goTo('part-d')"></div>
+  <div class="nav-dot"        data-label="(e) Adiabatic"    onclick="goTo('part-e')"></div>
+  <div class="nav-dot"        data-label="(f) PBR Profiles" onclick="goTo('part-f')"></div>
+  <div class="nav-dot"        data-label="(g) Isothermal Q" onclick="goTo('part-g')"></div>
 </nav>
 
-<!-- HERO -->
+<!-- ═══════ HERO ═══════ -->
 <section id="hero">
   <p class="hero-label">Chemical Reaction Engineering · Problem No. 8</p>
   <h1 class="hero-title">Packed Bed Reactor<br/>Non-Isothermal Analysis</h1>
   <div class="hero-reaction">A + B &rightleftharpoons; 2C</div>
   <p class="hero-sub">
-    F<sub style="font-size:.7em">A0</sub> = 5 mol/s &nbsp;|&nbsp; T<sub style="font-size:.7em">in</sub> = 325 K &nbsp;|&nbsp; T<sub style="font-size:.7em">coolant</sub> = 300 K<br/>
-    k = 0.002 dm³·kg⁻¹·mol⁻¹·s⁻¹ @ 300 K &nbsp;|&nbsp; k<sub style="font-size:.7em">c</sub> = 1000 @ 305 K
+    \(F_{A0}=5\;\text{mol/s}\) &nbsp;|&nbsp; \(T_{in}=325\;\text{K}\) &nbsp;|&nbsp; \(T_{coolant}=300\;\text{K}\)<br/>
+    \(k=0.002\;\text{dm}^3\!\cdot\!\text{kg}^{-1}\!\cdot\!\text{mol}^{-1}\!\cdot\!\text{s}^{-1}\) @ 300 K &nbsp;|&nbsp; \(k_c=1000\) @ 305 K
   </p>
   <div class="scroll-hint">SCROLL</div>
 </section>
 
-<!-- GIVEN DATA -->
+<!-- ═══════ GIVEN ═══════ -->
 <section id="given">
   <div class="container">
     <div class="section-header">
@@ -441,106 +139,99 @@
       <span class="section-title">Problem Data</span>
     </div>
     <div class="data-grid">
-      <div class="data-cell"><span class="data-key">F_A0</span><span class="data-val">5 mol/s</span></div>
-      <div class="data-cell"><span class="data-key">F_B0 = 2·F_A0</span><span class="data-val">10 mol/s</span></div>
-      <div class="data-cell"><span class="data-key">F_I0 = F_B0</span><span class="data-val">10 mol/s</span></div>
-      <div class="data-cell"><span class="data-key">T_in</span><span class="data-val">325 K</span></div>
-      <div class="data-cell"><span class="data-key">T_coolant</span><span class="data-val">300 K</span></div>
-      <div class="data-cell"><span class="data-key">Cp_A = Cp_B = Cp_C</span><span class="data-val">20 cal/mol/K</span></div>
-      <div class="data-cell"><span class="data-key">Cp_I</span><span class="data-val">18 cal/mol/K</span></div>
-      <div class="data-cell"><span class="data-key">E</span><span class="data-val">25 kcal/mol</span></div>
-      <div class="data-cell"><span class="data-key">ΔH_Rx @ 298 K</span><span class="data-val">−20 kcal/mol</span></div>
-      <div class="data-cell"><span class="data-key">ṁ_c</span><span class="data-val">18 mol/s</span></div>
-      <div class="data-cell"><span class="data-key">k @ 300 K</span><span class="data-val">0.002 dm³/kg·mol·s</span></div>
-      <div class="data-cell"><span class="data-key">α (Ergun)</span><span class="data-val">0.00015 kg⁻¹</span></div>
-      <div class="data-cell"><span class="data-key">Ua</span><span class="data-val">320 cal/s·m²·K</span></div>
-      <div class="data-cell"><span class="data-key">Cp_coolant</span><span class="data-val">18 cal/mol/K</span></div>
-      <div class="data-cell"><span class="data-key">k_c @ 305 K</span><span class="data-val">1000</span></div>
+      <div class="data-cell"><span class="data-key">F_A0</span><span class="data-val">\(5\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">F_B0 = 2·F_A0</span><span class="data-val">\(10\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">F_I0 = F_B0</span><span class="data-val">\(10\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">T_in</span><span class="data-val">\(325\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">T_coolant</span><span class="data-val">\(300\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">Cp_A = Cp_B = Cp_C</span><span class="data-val">\(20\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">Cp_I</span><span class="data-val">\(18\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">E (Activation Energy)</span><span class="data-val">\(25\;\text{kcal/mol}\)</span></div>
+      <div class="data-cell"><span class="data-key">ΔH_Rx @ 298 K</span><span class="data-val">\(-20\;\text{kcal/mol}\)</span></div>
+      <div class="data-cell"><span class="data-key">ṁ_c (coolant flow)</span><span class="data-val">\(18\;\text{mol/s}\)</span></div>
+      <div class="data-cell"><span class="data-key">k @ 300 K</span><span class="data-val">\(0.002\;\text{dm}^3\!\cdot\!\text{kg}^{-1}\!\cdot\!\text{mol}^{-1}\!\cdot\!\text{s}^{-1}\)</span></div>
+      <div class="data-cell"><span class="data-key">α (Ergun parameter)</span><span class="data-val">\(0.00015\;\text{kg}^{-1}\)</span></div>
+      <div class="data-cell"><span class="data-key">Ua (heat transfer coeff.)</span><span class="data-val">\(320\;\text{cal/s·m}^2\text{·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">Cp_coolant</span><span class="data-val">\(18\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">k_c @ 305 K</span><span class="data-val">\(1000\)</span></div>
     </div>
   </div>
 </section>
 
-<!-- PART A -->
+<!-- ═══════ PART A & B ═══════ -->
 <section id="part-a">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">Part (a) & (b)</span>
-      <span class="section-title">Balances & Equations</span>
+      <span class="section-tag">Part (a) &amp; (b)</span>
+      <span class="section-title">Balances &amp; Equations</span>
     </div>
 
     <p class="prose">Mole balance for a packed bed reactor (PBR):</p>
-    <div class="eq-block">
-dX / dV = −r'_A / F_A0
-    </div>
+    <div class="eq-block">$$\frac{dX}{dW} = \frac{-r'_A}{F_{A0}}$$</div>
 
-    <p class="prose">Rate law for this elementary reversible reaction:</p>
-    <div class="eq-block green">
-−r'_A = k(T) · [ C_A · C_B − C_C² / k_c(T) ]
-    </div>
+    <p class="prose">Rate law for this elementary reversible reaction \(A + B \rightleftharpoons 2C\):</p>
+    <div class="eq-block green">$$-r'_A = k(T)\left[C_A \cdot C_B - \frac{C_C^2}{k_c(T)}\right]$$</div>
 
-    <p class="prose">From A + B ⇌ 2C, stoichiometric coefficients: a = 1, b = 1, c = 2</p>
-
+    <p class="prose">From \(A + B \rightleftharpoons 2C\): stoichiometric coefficients \(a=1,\; b=1,\; c=2\)</p>
     <div class="divider"></div>
 
-    <p class="prose">Expansion factor check — since δ = 2 − (1+1) = 0, and ε = y_A0 · δ = 0, volumetric flow rate is solely a function of T and P.</p>
+    <p class="prose">Expansion factor check — since \(\delta = 2-(1+1)=0\), then \(\varepsilon = y_{A0}\cdot\delta = 0\). Thus volumetric flow rate is solely a function of \(T\) and \(P\).</p>
 
     <div class="eq-block">
-Θ_A = 1 ;  Θ_B = F_B0/F_A0 = 2 ;  Θ_C = 0
-ν_A = ν_B = −1 ;  ν_C = +2
+$$\Theta_A = \frac{F_{A0}}{F_{A0}} = 1,\qquad \Theta_B = \frac{F_{B0}}{F_{A0}} = \frac{2F_{A0}}{F_{A0}} = 2,\qquad \Theta_C = 0$$
+$$\nu_A = \nu_B = -1,\qquad \nu_C = +2$$
     </div>
 
-    <p class="prose">Concentrations as functions of X, P, and T (with ε = 0):</p>
-    <div class="eq-block cyan">
-C_A = C_A0 · (1 − X) · P · (T_0/T)
-C_B = C_A0 · (2 − X) · P · (T_0/T)
-C_C = C_A0 · (2X)    · P · (T_0/T)
+    <p class="prose">Concentrations as functions of \(X\), \(P\), and \(T\) (with \(\varepsilon = 0\)):</p>
+    <div class="eq-block" style="border-color:var(--cyan);color:var(--cyan)">
+$$C_A = C_{A0}(1-X)\,P\!\left(\frac{T_0}{T}\right)$$
+$$C_B = C_{A0}(2-X)\,P\!\left(\frac{T_0}{T}\right)$$
+$$C_C = C_{A0}(2X)\,P\!\left(\frac{T_0}{T}\right)$$
     </div>
 
     <p class="prose">Substituting all concentrations into the rate law:</p>
     <div class="eq-block amber">
-−r'_A = k(T) · C_A0² · [ (1−X)(2−X) − 4X² / k_c(T) ] · P² · (T_0/T)²
+$$-r'_A = k(T)\,C_{A0}^2\left[(1-X)(2-X) - \frac{4X^2}{k_c(T)}\right]P^2\!\left(\frac{T_0}{T}\right)^{\!2}$$
     </div>
 
-    <p class="prose">Temperature-dependent rate constants (Arrhenius / van't Hoff):</p>
+    <p class="prose">Temperature-dependent rate constants via Arrhenius and van't Hoff:</p>
     <div class="eq-block">
-k(T)   = 0.0002 · exp[ 25000/1.987 · (1/300 − 1/T) ]
-
-k_c(T) = 1000  · exp[ −20000/1.987 · (1/305 − 1/T) ]
+$$k(T) = 0.0002\exp\!\left[\frac{25{,}000}{1.987}\!\left(\frac{1}{300}-\frac{1}{T}\right)\right]$$
+$$k_c(T) = 1000\exp\!\left[\frac{-20{,}000}{1.987}\!\left(\frac{1}{305}-\frac{1}{T}\right)\right]$$
     </div>
   </div>
 </section>
 
-<!-- PART C -->
+<!-- ═══════ PART C ═══════ -->
 <section id="part-c">
   <div class="container">
     <div class="section-header">
       <span class="section-tag">Part (c)</span>
-      <span class="section-title">Equilibrium Conversion X_e vs Temperature</span>
+      <span class="section-title">Equilibrium Conversion \(X_e\) vs Temperature</span>
     </div>
 
-    <p class="prose">At equilibrium, −r'_A → 0, so the bracketed term equals zero:</p>
-    <div class="eq-block green">
-(1 − X_e)(2 − X_e) − 4X_e² / k_c(T) = 0
-    </div>
-    <p class="prose">Expanding and rearranging into quadratic form (× k_c/4):</p>
+    <p class="prose">At equilibrium, \(-r'_A \to 0\), so the bracketed term equals zero:</p>
+    <div class="eq-block green">$$\left(1-X_e\right)\!\left(2-X_e\right) - \frac{4X_e^2}{k_c(T)} = 0$$</div>
+
+    <p class="prose">Expanding and rearranging, then multiplying through by \(\dfrac{k_c}{4}\):</p>
     <div class="eq-block">
-(k_c/4 − 1) · X_e²  −  (3k_c/4) · X_e  +  (k_c/2)  =  0
+$$2 - 3X_e + X_e^2 - \frac{4X_e^2}{k_c} = 0 \qquad \times\frac{k_c}{4}$$
+$$\left(\frac{k_c}{4}-1\right)X_e^2 - \frac{3k_c}{4}\,X_e + \frac{k_c}{2} = 0$$
     </div>
-    <p class="prose">Applying the quadratic formula (a, b, c identified above):</p>
+
+    <p class="prose">Applying the quadratic formula, with \(a = \dfrac{k_c}{4}-1\), \(b = -\dfrac{3k_c}{4}\), \(c = \dfrac{k_c}{2}\):</p>
     <div class="eq-block amber">
-X_e = [ 3k_c/4 ± √( (3k_c/4)² − 2k_c·(k_c/4 − 1) ) ]
-      ─────────────────────────────────────────────────
-                      2 · (k_c/4 − 1)
+$$X_e = \frac{\dfrac{3k_c}{4} \pm \sqrt{\left(\dfrac{3k_c}{4}\right)^{\!2} - 2k_c\!\left(\dfrac{k_c}{4}-1\right)}}{2\!\left(\dfrac{k_c}{4}-1\right)}$$
     </div>
 
     <div class="chart-wrap">
-      <div class="chart-title">▸ Equilibrium Conversion (X_e) vs Temperature (K)</div>
+      <div class="chart-title">▸ Equilibrium Conversion \(X_e\) vs Temperature (K)</div>
       <canvas id="chart-xe" height="300"></canvas>
     </div>
 
-    <p class="prose">Data table — T(K), k_c(T), X_e:</p>
-    <div style="max-height:320px; overflow-y:auto; border:1px solid var(--border);">
-      <table class="data-table" id="xe-table">
+    <p class="prose">Data table — \(T\,(\text{K})\), \(k_c(T)\), \(X_e\):</p>
+    <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);">
+      <table class="data-table">
         <thead><tr><th>T (K)</th><th>k_c(T)</th><th>X_e</th></tr></thead>
         <tbody id="xe-tbody"></tbody>
       </table>
@@ -548,7 +239,7 @@ X_e = [ 3k_c/4 ± √( (3k_c/4)² − 2k_c·(k_c/4 − 1) ) ]
   </div>
 </section>
 
-<!-- PART D -->
+<!-- ═══════ PART D ═══════ -->
 <section id="part-d">
   <div class="container">
     <div class="section-header">
@@ -558,29 +249,25 @@ X_e = [ 3k_c/4 ± √( (3k_c/4)² − 2k_c·(k_c/4 − 1) ) ]
 
     <p class="prose">Sum of heat capacities (feed basis):</p>
     <div class="eq-block">
-ΣΘ_i · Cp_i  =  Cp_A + Θ_B · Cp_B + Θ_I · Cp_I
-              =  20 + 2(20) + 2(18)
-              =  <span style="color:var(--green)">96 cal/mol·K</span>
+$$\sum\Theta_i C_{p_i} = C_{p_A} + \Theta_B C_{p_B} + \Theta_I C_{p_I} = 20 + 2(20) + 2(18) = \mathbf{96}\;\text{cal/mol·K}$$
     </div>
 
-    <div class="eq-block cyan">
-ΔCp  =  2Cp_C − Cp_A − Cp_B
-      =  2(20) − (20+20)
-      =  <span style="color:var(--green)">0</span>   ← convenient!
+    <div class="eq-block" style="border-color:var(--cyan);color:var(--cyan)">
+$$\Delta C_p = 2C_{p_C} - C_{p_A} - C_{p_B} = 2(20)-(20+20) = \mathbf{0} \quad \leftarrow \text{convenient!}$$
     </div>
 
     <div class="data-grid" style="margin-top:1rem">
-      <div class="data-cell"><span class="data-key">T₀ (inlet)</span><span class="data-val">325 K</span></div>
-      <div class="data-cell"><span class="data-key">T₁ (ref. for k)</span><span class="data-val">300 K</span></div>
-      <div class="data-cell"><span class="data-key">T₂ (ref. for k_c)</span><span class="data-val">305 K</span></div>
-      <div class="data-cell"><span class="data-key">ΣΘ_i·Cp_i</span><span class="data-val">96 cal/mol·K</span></div>
-      <div class="data-cell"><span class="data-key">ΔCp</span><span class="data-val">0 cal/mol·K</span></div>
-      <div class="data-cell"><span class="data-key">−ΔH_Rx</span><span class="data-val">+20 kcal/mol</span></div>
+      <div class="data-cell"><span class="data-key">T₀ (inlet)</span><span class="data-val">\(325\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">T₁ (ref. for k)</span><span class="data-val">\(300\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">T₂ (ref. for k_c)</span><span class="data-val">\(305\;\text{K}\)</span></div>
+      <div class="data-cell"><span class="data-key">ΣΘᵢCpᵢ</span><span class="data-val">\(96\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">ΔCp</span><span class="data-val">\(0\;\text{cal/mol·K}\)</span></div>
+      <div class="data-cell"><span class="data-key">−ΔH_Rx</span><span class="data-val">\(+20{,}000\;\text{cal/mol}\)</span></div>
     </div>
   </div>
 </section>
 
-<!-- PART E -->
+<!-- ═══════ PART E ═══════ -->
 <section id="part-e">
   <div class="container">
     <div class="section-header">
@@ -590,85 +277,85 @@ X_e = [ 3k_c/4 ± √( (3k_c/4)² − 2k_c·(k_c/4 − 1) ) ]
 
     <p class="prose">General energy balance (non-adiabatic):</p>
     <div class="eq-block">
-T = T₀ + X · [ −ΔH_Rx(T_r) + ΔCp·(T_r − T₀) ]
-    ────────────────────────────────────────────
-                ΣΘ_i·Cp_i  +  X·ΔCp
+$$T = T_0 + \frac{X\!\left[-\Delta H_{Rx}(T_r) + \Delta C_p(T_r - T_0)\right]}{\displaystyle\sum\Theta_i C_{p_i} + X\,\Delta C_p}$$
     </div>
 
-    <p class="prose">Since ΔCp = 0, the adiabatic energy balance simplifies to:</p>
+    <p class="prose">Since \(\Delta C_p = 0\), the adiabatic energy balance simplifies to:</p>
     <div class="eq-block green">
-T  =  T₀  +  X · (−ΔH_Rx) / ΣΘ_i·Cp_i
+$$T = T_0 + \frac{X\,(-\Delta H_{Rx})}{\displaystyle\sum\Theta_i C_{p_i}}$$
     </div>
 
-    <p class="prose">Substituting values (T₀ = 325 K, −ΔH_Rx = 20,000 cal/mol, ΣΘ_i·Cp_i = 96 cal/mol·K):</p>
-    <div class="eq-block amber" style="font-size:1.15rem;">
-T  =  325  +  (20000 / 96) · X
-T  =  325  +  208.33 · X
+    <p class="prose">Substituting values \(\bigl(T_0=325\;\text{K},\;{-\Delta H_{Rx}}=20{,}000\;\text{cal/mol},\;\sum\Theta_i C_{p_i}=96\;\text{cal/mol·K}\bigr)\):</p>
+    <div class="eq-block amber">
+$$T = 325 + \frac{20{,}000}{96}\,X \;=\; 325 + 208.33\,X$$
     </div>
 
     <div class="chart-wrap">
-      <div class="chart-title">▸ Adiabatic Temperature Line — T(K) vs Conversion (X)</div>
+      <div class="chart-title">▸ Adiabatic Temperature Line — \(T\) (K) vs Conversion \(X\)</div>
       <canvas id="chart-adiabatic" height="280"></canvas>
     </div>
   </div>
 </section>
 
-<!-- PART F -->
+<!-- ═══════ PART F ═══════ -->
 <section id="part-f">
   <div class="container">
     <div class="section-header">
       <span class="section-tag">Part (f)</span>
-      <span class="section-title">Plot X_e, X, p, T vs Catalyst Weight W</span>
+      <span class="section-title">Plot \(X_e,\,X,\,p,\,T\) vs Catalyst Weight \(W\)</span>
     </div>
 
-    <p class="prose">For a packed bed with pressure drop (Ergun equation, dimensionless form). Since ε = 0:</p>
+    <p class="prose">For a packed bed with pressure drop (Ergun equation, dimensionless form). Since \(\varepsilon = 0\):</p>
     <div class="eq-block">
-dp/dW  =  − (α / 2p) · (T / T₀)
-
-where  α = 0.00015 kg⁻¹
+$$\frac{dp}{dW} = -\frac{\alpha}{2p}\!\left(\frac{T}{T_0}\right), \qquad \alpha = 0.00015\;\text{kg}^{-1}$$
     </div>
 
-    <p class="prose">The full ODE system solved simultaneously (Python / scipy.integrate.solve_ivp):</p>
-    <div class="code-block" id="code-f"><span class="code-comment"># ODE system for adiabatic PBR with pressure drop</span>
-<span class="code-key">def</span> pbr_model(W, y):
-    X   = y[0]   <span class="code-comment"># Conversion</span>
-    p   = y[1]   <span class="code-comment"># Dimensionless pressure (P/P0)</span>
+    <p class="prose">Full ODE system solved simultaneously:</p>
+    <div class="code-block"><span class="code-key">def</span> pbr_model(W, y):
+    X  = y[0]  <span class="code-comment"># Conversion</span>
+    p  = y[1]  <span class="code-comment"># Dimensionless pressure (P/P₀)</span>
 
-    <span class="code-comment"># Algebraic — Energy & Thermodynamics</span>
-    T    = 325.0 + 208.33 * X
-    k    = 0.0002 * np.exp((25000 / R) * (1/300 - 1/T))
-    Kc   = 1000  * np.exp((-20000 / R) * (1/305 - 1/T))
+    T  = 325.0 + 208.33 * X
+    k  = 0.0002 * np.exp((25000 / R) * (1/300 - 1/T))
+    Kc = 1000  * np.exp((-20000 / R) * (1/305 - 1/T))
 
-    <span class="code-comment"># Rate Law</span>
-    ra   = k * (Ca0**2) * ((1-X)*(2-X) - (4*X**2)/Kc) * (p**2) * ((T0/T)**2)
+    ra = k * (Ca0**2) * ((1-X)*(2-X) - (4*X**2)/Kc) * (p**2) * ((T0/T)**2)
 
-    <span class="code-comment"># Differential Equations</span>
-    dXdW = ra_prime / Fa0
+    dXdW = ra / Fa0
     dpdW = -alpha * (T / T0) / (2 * p)
-    <span class="code-key">return</span> [dXdW, dpdW]</div>
+    <span class="code-key">return</span> [dXdW, dpdW]
 
-    <div class="sketches-grid">
-      <div class="sketch-card">
-        <div class="sketch-label">Plot I — Conversion</div>
-        <canvas id="sketch-conv" height="180"></canvas>
+<span class="code-comment"># Post-processing</span>
+T  = 325.0 + 208.33 * X
+Kc = 1000 * np.exp((-20000 / R) * (1/305 - 1/T))
+Xe = (0.75*Kc - np.sqrt((0.75*Kc)**2 - 2*Kc*(0.25*Kc - 1))) / (2*(0.25*Kc - 1))</div>
+
+    <!-- 3 separate plot cards -->
+    <div class="plots-grid">
+      <div class="plot-card">
+        <div class="plot-label">Plot 1 — Conversion Profiles down the PBR</div>
+        <canvas id="plot-conv" height="260"></canvas>
       </div>
-      <div class="sketch-card">
-        <div class="sketch-label">Plot II — Temperature</div>
-        <canvas id="sketch-temp" height="180"></canvas>
+      <div class="plot-card">
+        <div class="plot-label">Plot 2 — Temperature Profile</div>
+        <canvas id="plot-temp" height="260"></canvas>
       </div>
-      <div class="sketch-card">
-        <div class="sketch-label">Plot III — Pressure</div>
-        <canvas id="sketch-press" height="180"></canvas>
+      <div class="plot-card">
+        <div class="plot-label">Plot 3 — Dimensionless Pressure Profile</div>
+        <canvas id="plot-press" height="260"></canvas>
       </div>
     </div>
 
-    <p class="prose" style="margin-top:1.5rem;font-size:.85rem;color:var(--muted);">
-      Analysis: Temperature rises as reaction proceeds (exothermic), causing gas expansion and faster flow — this slightly accelerates pressure drop down the bed. Actual X rises while X_e falls as T increases; their intersection marks the maximum adiabatic conversion achievable.
+    <p class="prose" style="font-size:.88rem;color:var(--muted);margin-top:1.2rem;">
+      <strong style="color:var(--text)">Analysis:</strong>
+      <em>Pressure profile:</em> Because \(T\) is rising (gas expands and flows faster), the pressure drop actually accelerates slightly as the bed moves down.
+      <em>Temperature profile:</em> Starts rising rapidly above \(T_0\) since the reaction is fast at the entrance. As the reaction slows down it will flatten out (stagnant).
+      <em>Conversion (X and \(X_e\)):</em> Actual \(X\) starts at 0 and rises upward. At the same time, because temp. is rising, the \(X_e\) starts high and drops downwards. The intersected line is the absolute max. \(X\) the adiabatic reactor could achieve.
     </p>
   </div>
 </section>
 
-<!-- PART G -->
+<!-- ═══════ PART G ═══════ -->
 <section id="part-g">
   <div class="container">
     <div class="section-header">
@@ -676,43 +363,39 @@ where  α = 0.00015 kg⁻¹
       <span class="section-title">Isothermal Operation — Heat Removal Profile</span>
     </div>
 
-    <p class="prose">To maintain isothermal operation, the cooling jacket must perfectly match heat generated at every point. The local heat generated:</p>
-    <div class="eq-block amber">
-Local Heat Generated  =  (−r'_A) · (−ΔH_Rx)
-    </div>
-    <p class="prose">A new differential equation tracks cumulative heat removed Q̇ along catalyst weight W:</p>
-    <div class="eq-block green">
-dQ̇/dW  =  (−r'_A) · (−ΔH_Rx)
-         =  20,000 cal/mol · (−r'_A)
-    </div>
-    <p class="prose">Converting catalyst weight W to reactor volume V via bulk density ρ_b = 1.4 kg/dm³:</p>
-    <div class="eq-block">
-W  =  ρ_b · V   →   V  =  W / 1.4   [dm³]
-    </div>
-    <p class="prose">Plot Q̇ (kcal/s) vs V (dm³) — both cumulative heat removed and conversion profile shown:</p>
+    <p class="prose">To maintain isothermal operation, the heat removed by cooling jacket must perfectly match the heat generated by the reaction at every single point down the reactor.</p>
 
+    <div class="eq-block amber">$$\text{Local Heat Generated} = (-r'_A)(-\Delta H_{Rx})$$</div>
+
+    <p class="prose">To find the cumulative heat removed \(\dot{Q}\) as the reactor moves down, set a new differential equation to add up that heat along the catalyst weight \(W\):</p>
+    <div class="eq-block green">
+$$\frac{d\dot{Q}}{dW} = (-r'_A)(-\Delta H_{Rx}) = 20{,}000\;\frac{\text{cal}}{\text{mol}}\cdot(-r'_A)$$
+    </div>
+
+    <p class="prose">To find volume \(V\), where \(W = \rho_b\,V\) with \(\rho_b = 1.4\;\text{kg/dm}^3\):</p>
+    <div class="eq-block">$$V = \frac{W}{\rho_b} = \frac{W}{1.4}\;\left[\text{dm}^3\right]$$</div>
+
+    <p class="prose">Plot \(\dot{Q}\) vs \(V\):</p>
     <div class="chart-wrap">
-      <div class="chart-title">▸ Cumulative Heat Removed Q̇ & Conversion (X) vs Reactor Volume V (dm³) — Isothermal at T = 325 K</div>
+      <div class="chart-title">▸ Part (g): Heat Removal Profile for Isothermal Operation</div>
       <canvas id="chart-isothermal" height="320"></canvas>
     </div>
 
     <p class="prose">The code used:</p>
-    <div class="code-block" id="code-g"><span class="code-comment"># Isothermal ODE (T = T0 = 325 K always)</span>
+    <div class="code-block"><span class="code-comment"># Isothermal ODE — T = T₀ = 325 K constant</span>
 <span class="code-key">def</span> isothermal_model(W, y):
     X     = y[0]
     p     = y[1]
-    Q_rem = y[2]  <span class="code-comment"># Cumulative heat removed</span>
+    Q_rem = y[2]  <span class="code-comment"># Cumulative heat removed (cal/s)</span>
 
-    <span class="code-comment"># Isothermal rate law (T/T0 = 1)</span>
     ra_prime = k * (Ca0**2) * ((1-X)*(2-X) - (4*X**2)/Kc) * (p**2)
 
-    dXdW  = ra_prime / Fa0
-    dpdW  = -alpha / (2 * p)            <span class="code-comment"># T/T0 = 1</span>
-    dQdW  = ra_prime * (-delta_H)       <span class="code-comment"># = 20000 cal/mol · ra</span>
-
+    dXdW = ra_prime / Fa0
+    dpdW = -alpha / (2 * p)        <span class="code-comment"># T/T₀ = 1</span>
+    dQdW = ra_prime * (-delta_H)   <span class="code-comment"># Heat generated = Heat removed</span>
     <span class="code-key">return</span> [dXdW, dpdW, dQdW]
 
-<span class="code-comment"># Convert W → V and Q cal/s → kcal/s for plotting</span>
+<span class="code-comment"># Convert W (kg) → V (dm³) and Q (cal/s) → Q̇ (kcal/s)</span>
 V         = W / rho_b
 Q_removed = solution.y[2] / 1000</div>
   </div>
@@ -720,409 +403,236 @@ Q_removed = solution.y[2] / 1000</div>
 
 <footer>
   <div class="container">
-    CRE — Problem No. 8 &nbsp;·&nbsp; A + B ⇌ 2C &nbsp;·&nbsp; Non-Isothermal Packed Bed Reactor Analysis<br/>
-    <span style="color:#2a4a5a; margin-top:.5rem; display:block;">Built with HTML + Chart.js · Hosted on Netlify</span>
+    CRE — Problem No. 8 &nbsp;·&nbsp; \(A + B \rightleftharpoons 2C\) &nbsp;·&nbsp; Non-Isothermal Packed Bed Reactor Analysis<br/>
+    <span style="color:#2a4a5a;margin-top:.5rem;display:block;">HTML + MathJax + Chart.js · Hosted on Netlify</span>
   </div>
 </footer>
 
 <script>
-// ─── PARTICLE CANVAS ───────────────────────────────────────────────────────────
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W2, H2, particles = [];
-
-function resizeCanvas() {
-  W2 = canvas.width  = window.innerWidth;
-  H2 = canvas.height = window.innerHeight;
-}
+// ─── PARTICLE CANVAS ────────────────────────────────────────────────────────────
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W2,H2,particles=[];
+function resizeCanvas(){W2=canvas.width=window.innerWidth;H2=canvas.height=window.innerHeight;}
 resizeCanvas();
-window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
-
-function initParticles() {
-  particles = [];
-  const N = Math.min(80, Math.floor(W2 * H2 / 18000));
-  for (let i = 0; i < N; i++) {
-    particles.push({
-      x: Math.random() * W2,
-      y: Math.random() * H2,
-      vx: (Math.random() - .5) * .3,
-      vy: (Math.random() - .5) * .3,
-      r: Math.random() * 2 + 1
-    });
-  }
+window.addEventListener('resize',()=>{resizeCanvas();initParticles();});
+function initParticles(){
+  particles=[];
+  const N=Math.min(70,Math.floor(W2*H2/18000));
+  for(let i=0;i<N;i++)particles.push({x:Math.random()*W2,y:Math.random()*H2,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+1});
 }
 initParticles();
-
-function drawParticles() {
-  ctx.clearRect(0, 0, W2, H2);
-  // connections
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i+1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 130) {
-        ctx.strokeStyle = `rgba(0,212,255,${(1 - dist/130) * 0.18})`;
-        ctx.lineWidth = .5;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.stroke();
-      }
-    }
+function drawParticles(){
+  ctx.clearRect(0,0,W2,H2);
+  for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
+    const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){ctx.strokeStyle=`rgba(0,212,255,${(1-d/130)*.18})`;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke();}
   }
-  // dots
-  particles.forEach(p => {
-    ctx.fillStyle = '#00d4ff55';
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fill();
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0 || p.x > W2) p.vx *= -1;
-    if (p.y < 0 || p.y > H2) p.vy *= -1;
+  particles.forEach(p=>{
+    ctx.fillStyle='#00d4ff55';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W2)p.vx*=-1;if(p.y<0||p.y>H2)p.vy*=-1;
   });
   requestAnimationFrame(drawParticles);
 }
 drawParticles();
 
-// ─── PROGRESS BAR ──────────────────────────────────────────────────────────────
-const progressBar = document.getElementById('progress-bar');
-window.addEventListener('scroll', () => {
-  const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-  progressBar.style.width = (p * 100) + '%';
+// ─── PROGRESS BAR & NAV ─────────────────────────────────────────────────────────
+const progressBar=document.getElementById('progress-bar');
+window.addEventListener('scroll',()=>{
+  progressBar.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
   updateNavDots();
 });
-
-// ─── NAV DOTS ──────────────────────────────────────────────────────────────────
-const sectionIds = ['given','part-a','part-b','part-c','part-d','part-e','part-f','part-g'];
-// note: no part-b section id exists separately; it's in part-a
-const dots = document.querySelectorAll('.nav-dot');
-
-function scrollTo(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
-function updateNavDots() {
-  const ids = ['given','part-a','part-c','part-d','part-e','part-f','part-g'];
-  ids.forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.top <= window.innerHeight/2 && rect.bottom >= window.innerHeight/2) {
-      dots.forEach(d => d.classList.remove('active'));
-      if (dots[i]) dots[i].classList.add('active');
-    }
+function goTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+const sectionNavIds=['given','part-a','part-c','part-d','part-e','part-f','part-g'];
+const dots=document.querySelectorAll('.nav-dot');
+function updateNavDots(){
+  sectionNavIds.forEach((id,i)=>{
+    const el=document.getElementById(id);if(!el)return;
+    const r=el.getBoundingClientRect();
+    if(r.top<=window.innerHeight/2&&r.bottom>=window.innerHeight/2){dots.forEach(d=>d.classList.remove('active'));if(dots[i])dots[i].classList.add('active');}
   });
 }
 
-// ─── SCROLL REVEAL ─────────────────────────────────────────────────────────────
-const revealEls = document.querySelectorAll('.data-cell, .eq-block, .prose, .chart-wrap, .code-block, .sketch-card');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 60);
-    }
-  });
-}, { threshold: 0.1 });
-revealEls.forEach(el => observer.observe(el));
+// ─── SCROLL REVEAL ──────────────────────────────────────────────────────────────
+const revealEls=document.querySelectorAll('.data-cell,.eq-block,.prose,.chart-wrap,.code-block,.plot-card');
+new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*55);});
+},{threshold:.08}).observe;
+// use forEach properly
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*55);});
+},{threshold:.08});
+revealEls.forEach(el=>obs.observe(el));
 
-// ─── DATA ──────────────────────────────────────────────────────────────────────
-const R = 1.987; // cal/mol/K
+// ─── MATHS (JavaScript mirrors the Python exactly) ──────────────────────────────
+const R_gas=1.987;
+const Fa0=5.0, Ca0=0.2, T0=325.0, alpha=0.00015;
 
-function kc(T) {
-  return 1000 * Math.exp((-20000 / R) * (1/305 - 1/T));
-}
-function k(T) {
-  return 0.0002 * Math.exp((25000 / R) * (1/300 - 1/T));
-}
+function kcFn(T){return 1000*Math.exp((-20000/R_gas)*(1/305-1/T));}
+function kFn(T) {return 0.0002*Math.exp((25000/R_gas)*(1/300-1/T));}
 
-function xeFromKc(Kc) {
-  const a = Kc/4 - 1;
-  const b = -3*Kc/4;
-  const c = Kc/2;
-  if (Math.abs(a) < 1e-12) return 0;
-  const disc = b*b - 4*a*c;
-  if (disc < 0) return 0;
-  const x1 = (-b - Math.sqrt(disc)) / (2*a);
-  const x2 = (-b + Math.sqrt(disc)) / (2*a);
-  const cands = [x1, x2].filter(x => x >= 0 && x <= 1);
-  if (!cands.length) return Math.max(0, Math.min(1, x1));
-  return Math.min(...cands);
+// Xe from proven equation (matches Python: (0.75*Kc - sqrt(...)) / (2*(0.25*Kc-1)))
+function xeFromKc(Kc){
+  const num_inner=(0.75*Kc)**2 - 2*Kc*(0.25*Kc-1);
+  if(num_inner<0)return 0;
+  const xe=(0.75*Kc - Math.sqrt(num_inner))/(2*(0.25*Kc-1));
+  return Math.max(0,Math.min(1,xe));
 }
 
-// Populate table
-const tbody = document.getElementById('xe-tbody');
-const temps  = [], xeVals = [], kcVals = [];
-for (let T = 300; T <= 600; T += 10) {
-  const Kc = kc(T);
-  const xe = xeFromKc(Kc);
-  temps.push(T);
-  kcVals.push(Kc);
-  xeVals.push(xe);
-  const tr = document.createElement('tr');
-  if (Math.abs(xe - 0.5) < 0.05) tr.className = 'highlight';
-  tr.innerHTML = `<td>${T}</td><td>${Kc.toFixed(4)}</td><td>${xe.toFixed(6)}</td>`;
+// ─── XE TABLE ───────────────────────────────────────────────────────────────────
+const temps=[],xeVals=[],kcVals=[];
+const tbody=document.getElementById('xe-tbody');
+for(let T=300;T<=600;T+=10){
+  const Kc=kcFn(T),xe=xeFromKc(Kc);
+  temps.push(T);kcVals.push(Kc);xeVals.push(xe);
+  const tr=document.createElement('tr');
+  if(Math.abs(xe-.5)<.06)tr.className='highlight';
+  tr.innerHTML=`<td>${T}</td><td>${Kc.toFixed(4)}</td><td>${xe.toFixed(6)}</td>`;
   tbody.appendChild(tr);
 }
 
-// ─── CHART: Xe vs T ────────────────────────────────────────────────────────────
-const chartXeCtx = document.getElementById('chart-xe').getContext('2d');
-new Chart(chartXeCtx, {
-  type: 'line',
-  data: {
-    labels: temps,
-    datasets: [{
-      label: 'Equilibrium Conversion Xₑ',
-      data: xeVals,
-      borderColor: '#00ff88',
-      backgroundColor: 'rgba(0,255,136,0.07)',
-      borderWidth: 2.5,
-      pointRadius: 0,
-      tension: 0.3,
-      fill: true,
-    }]
-  },
-  options: {
-    responsive: true,
-    animation: { duration: 2000, easing: 'easeInOutQuart' },
-    plugins: {
-      legend: { labels: { color: '#c8d8e8', font: { family: 'Share Tech Mono', size: 11 } } },
-      tooltip: {
-        backgroundColor: '#0d1117',
-        borderColor: '#1e3a4f',
-        borderWidth: 1,
-        titleColor: '#00ff88',
-        bodyColor: '#c8d8e8',
-        titleFont: { family: 'Share Tech Mono' },
-        bodyFont:  { family: 'Share Tech Mono' },
-      }
-    },
-    scales: {
-      x: {
-        title: { display: true, text: 'Temperature (K)', color: '#5a7a8a', font: { family: 'Share Tech Mono' } },
-        ticks: { color: '#5a7a8a', font: { family: 'Share Tech Mono', size: 10 }, maxTicksLimit: 10 },
-        grid: { color: 'rgba(30,58,79,0.5)' }
-      },
-      y: {
-        title: { display: true, text: 'Xₑ', color: '#5a7a8a', font: { family: 'Share Tech Mono' } },
-        ticks: { color: '#5a7a8a', font: { family: 'Share Tech Mono', size: 10 } },
-        grid: { color: 'rgba(30,58,79,0.5)' },
-        min: 0, max: 1.05
-      }
-    }
-  }
+// ─── CHART DEFAULTS ─────────────────────────────────────────────────────────────
+const mono='Share Tech Mono';
+const tt={backgroundColor:'#0d1117',borderColor:'#1e3a4f',borderWidth:1,bodyColor:'#c8d8e8',titleFont:{family:mono},bodyFont:{family:mono}};
+const gc='rgba(30,58,79,0.5)';
+function scaleX(label,col){return{title:{display:true,text:label,color:col||'#5a7a8a',font:{family:mono}},ticks:{color:'#5a7a8a',font:{family:mono,size:10},maxTicksLimit:8},grid:{color:gc}};}
+function scaleY(label,col,pos){return{position:pos||'left',title:{display:true,text:label,color:col||'#5a7a8a',font:{family:mono}},ticks:{color:col||'#5a7a8a',font:{family:mono,size:10}},grid:{color:gc}};}
+
+// ─── CHART 1: Xe vs T ───────────────────────────────────────────────────────────
+new Chart(document.getElementById('chart-xe').getContext('2d'),{
+  type:'line',
+  data:{labels:temps,datasets:[{label:'Equilibrium Xₑ',data:xeVals,borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,.07)',borderWidth:2.5,pointRadius:0,tension:0.3,fill:true}]},
+  options:{responsive:true,animation:{duration:2000,easing:'easeInOutQuart'},plugins:{legend:{labels:{color:'#c8d8e8',font:{family:mono,size:11}}},tooltip:{...tt,titleColor:'#00ff88'}},scales:{x:scaleX('Temperature (K)'),y:{...scaleY('Xₑ'),min:0,max:1.05}}}
 });
 
-// ─── CHART: Adiabatic T vs X ───────────────────────────────────────────────────
-const adiabCtx = document.getElementById('chart-adiabatic').getContext('2d');
-const xRange = Array.from({length: 101}, (_, i) => i/100);
-const Tvals  = xRange.map(x => 325 + 208.33 * x);
-const xeFromT = xRange.map(x => {
-  const T = 325 + 208.33 * x;
-  return xeFromKc(kc(T));
+// ─── CHART 2: Adiabatic T vs X ──────────────────────────────────────────────────
+const xRange=Array.from({length:101},(_,i)=>i/100);
+new Chart(document.getElementById('chart-adiabatic').getContext('2d'),{
+  type:'line',
+  data:{labels:xRange.map(x=>x.toFixed(2)),datasets:[
+    {label:'T (K) — Adiabatic Line',data:xRange.map(x=>325+208.33*x),borderColor:'#ffb300',borderWidth:2.5,pointRadius:0,tension:0.1,yAxisID:'yT'},
+    {label:'Xₑ (Equilibrium)',data:xRange.map(x=>xeFromKc(kcFn(325+208.33*x))),borderColor:'#00d4ff',borderWidth:2,pointRadius:0,tension:0.3,borderDash:[6,4],yAxisID:'yX'}
+  ]},
+  options:{responsive:true,animation:{duration:1800},plugins:{legend:{labels:{color:'#c8d8e8',font:{family:mono,size:11}}},tooltip:{...tt,titleColor:'#ffb300'}},
+    scales:{x:scaleX('Conversion X'),yT:{...scaleY('T (K)','#ffb300')},yX:{position:'right',title:{display:true,text:'Xₑ',color:'#00d4ff',font:{family:mono}},ticks:{color:'#00d4ff',font:{family:mono,size:10}},grid:{display:false},min:0,max:1.1}}}
 });
 
-new Chart(adiabCtx, {
-  type: 'line',
-  data: {
-    labels: xRange.map(x => x.toFixed(2)),
-    datasets: [
-      {
-        label: 'T (K) — Adiabatic Line',
-        data: Tvals,
-        borderColor: '#ffb300',
-        borderWidth: 2.5,
-        pointRadius: 0,
-        tension: 0.1,
-        yAxisID: 'yT'
-      },
-      {
-        label: 'X_e (Equilibrium)',
-        data: xeFromT,
-        borderColor: '#00d4ff',
-        borderWidth: 2,
-        borderDash: [6,4],
-        pointRadius: 0,
-        tension: 0.3,
-        yAxisID: 'yX'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    animation: { duration: 1800 },
-    plugins: {
-      legend: { labels: { color: '#c8d8e8', font: { family: 'Share Tech Mono', size: 11 } } },
-      tooltip: { backgroundColor: '#0d1117', borderColor: '#1e3a4f', borderWidth: 1, titleColor: '#ffb300', bodyColor: '#c8d8e8', titleFont: { family: 'Share Tech Mono' }, bodyFont: { family: 'Share Tech Mono' } }
-    },
-    scales: {
-      x: {
-        title: { display: true, text: 'Conversion X', color: '#5a7a8a', font: { family: 'Share Tech Mono' } },
-        ticks: { color: '#5a7a8a', font: { family: 'Share Tech Mono', size: 10 }, maxTicksLimit: 11 },
-        grid: { color: 'rgba(30,58,79,0.5)' }
-      },
-      yT: {
-        position: 'left',
-        title: { display: true, text: 'T (K)', color: '#ffb300', font: { family: 'Share Tech Mono' } },
-        ticks: { color: '#ffb300', font: { family: 'Share Tech Mono', size: 10 } },
-        grid: { color: 'rgba(30,58,79,0.5)' }
-      },
-      yX: {
-        position: 'right',
-        title: { display: true, text: 'X_e', color: '#00d4ff', font: { family: 'Share Tech Mono' } },
-        ticks: { color: '#00d4ff', font: { family: 'Share Tech Mono', size: 10 } },
-        grid: { display: false },
-        min: 0, max: 1.1
-      }
-    }
+// ─── ODE SOLVER — EXACT PYTHON LOGIC (Euler, 8000 steps for accuracy) ──────────
+// Mirrors pbr_model(W, y) exactly:
+// T = 325.0 + 208.33 * X
+// k = 0.0002 * exp((25000/R)*(1/300 - 1/T))
+// Kc = 1000 * exp((-20000/R)*(1/305 - 1/T))
+// ra = k*(Ca0^2)*((1-X)*(2-X) - (4*X^2)/Kc)*(p^2)*((T0/T)^2)
+// dXdW = ra/Fa0
+// dpdW = -alpha*(T/T0)/(2*p)
+function solvePBR(steps,Wmax){
+  const dW=Wmax/steps;
+  let X=0,p=1;
+  const Ws=[0],Xs=[0],ps=[1],Ts=[T0],Xes=[xeFromKc(kcFn(T0))];
+  for(let i=0;i<steps;i++){
+    const T=325.0+208.33*X;
+    const K=kFn(T),Kc_=kcFn(T);
+    let rA=K*Ca0*Ca0*((1-X)*(2-X)-4*X*X/Kc_)*p*p*(T0/T)*(T0/T);
+    if(rA<0)rA=0;
+    X=Math.min(X+(rA/Fa0)*dW,0.9999);
+    p=Math.max(p+(-alpha*(T/T0)/(2*p))*dW,0.001);
+    const Tnew=325.0+208.33*X;
+    Ws.push((i+1)*dW);Xs.push(X);ps.push(p);Ts.push(Tnew);Xes.push(xeFromKc(kcFn(Tnew)));
   }
-});
-
-// ─── ODE SOLVER (simple Euler for browser) ─────────────────────────────────────
-function solvePBR(steps=4000, Wmax=4000, isothermal=false) {
-  const dW = Wmax / steps;
-  const Ca0 = 0.2, Fa0 = 5, alpha = 0.00015, T0 = 325;
-  let X=0, p=1, Q=0;
-  const Ws=[], Xs=[], ps=[], Ts=[], Xes=[], Qs=[];
-  Ws.push(0); Xs.push(0); ps.push(1); Ts.push(T0); Xes.push(xeFromKc(kc(T0))); Qs.push(0);
-
-  for (let i=0; i<steps; i++) {
-    const T   = isothermal ? T0 : (325 + 208.33*X);
-    const K   = k(T);
-    const Kc_ = kc(T);
-    const bracket = (1-X)*(2-X) - 4*X*X/Kc_;
-    let rA = K * Ca0*Ca0 * bracket * p*p * (T0/T)*(T0/T);
-    if (rA < 0) rA = 0;
-    const dXdW = rA / Fa0;
-    const dpdW = -alpha * (T/T0) / (2*p);
-    const dQdW = rA * 20000; // cal/s per kg
-
-    X = Math.min(X + dXdW * dW, 0.999);
-    p = Math.max(p + dpdW * dW, 0.01);
-    Q += dQdW * dW;
-
-    const T_new = isothermal ? T0 : (325 + 208.33*X);
-    const Kc_new = kc(T_new);
-    const xe = xeFromKc(Kc_new);
-    const curW = (i+1)*dW;
-    Ws.push(curW); Xs.push(X); ps.push(p);
-    Ts.push(T_new); Xes.push(xe); Qs.push(Q);
-  }
-  return { Ws, Xs, ps, Ts, Xes, Qs };
+  return{Ws,Xs,ps,Ts,Xes};
 }
 
-const sol  = solvePBR(4000, 4000, false);
-const solI = solvePBR(3000, 3000, true);
-
-// Downsample for chart
-function downsample(arr, n=200) {
-  const step = Math.max(1, Math.floor(arr.length / n));
-  return arr.filter((_, i) => i % step === 0);
+// Mirrors isothermal_model(W, y) exactly:
+// ra = k*(Ca0^2)*((1-X)*(2-X) - (4*X^2)/Kc)*(p^2)  [T=T0 so T0/T=1]
+// dXdW = ra/Fa0 ; dpdW = -alpha/(2*p) ; dQdW = ra*(-delta_H) = ra*20000
+function solveIsothermal(steps,Wmax){
+  const dW=Wmax/steps;
+  const kIso=kFn(T0), KcIso=kcFn(T0);
+  let X=0,p=1,Q=0;
+  const Ws=[0],Xs=[0],Qs=[0],ps_i=[1];
+  for(let i=0;i<steps;i++){
+    let rA=kIso*Ca0*Ca0*((1-X)*(2-X)-4*X*X/KcIso)*p*p;
+    if(rA<0)rA=0;
+    X=Math.min(X+(rA/Fa0)*dW,0.9999);
+    p=Math.max(p+(-alpha/(2*p))*dW,0.001);
+    Q+=rA*20000*dW;
+    Ws.push((i+1)*dW);Xs.push(X);Qs.push(Q);ps_i.push(p);
+  }
+  return{Ws,Xs,Qs,ps_i};
 }
 
-const Wds  = downsample(sol.Ws);
-const Xds  = downsample(sol.Xs);
-const pds  = downsample(sol.ps);
-const Tds  = downsample(sol.Ts);
-const Xeds = downsample(sol.Xes);
+const sol =solvePBR(8000,4000);
+const solI=solveIsothermal(8000,4000);
+function ds(arr,n=300){const s=Math.max(1,Math.floor(arr.length/n));return arr.filter((_,i)=>i%s===0);}
 
-// ─── SKETCH CHARTS ─────────────────────────────────────────────────────────────
-const commonOpts = (xlabel, ylabel, col) => ({
-  responsive: true,
-  animation: { duration: 2000, easing: 'easeInOutQuart' },
-  plugins: {
-    legend: { labels: { color: '#c8d8e8', font: { family: 'Share Tech Mono', size: 10 } } },
-    tooltip: { backgroundColor: '#0d1117', borderColor: '#1e3a4f', borderWidth: 1, bodyColor: '#c8d8e8', bodyFont: { family: 'Share Tech Mono' } }
-  },
-  scales: {
-    x: { title: { display: true, text: xlabel, color: '#5a7a8a', font: { family: 'Share Tech Mono', size: 9 } }, ticks: { color: '#5a7a8a', font: { family: 'Share Tech Mono', size: 8 }, maxTicksLimit: 6 }, grid: { color: 'rgba(30,58,79,0.4)' } },
-    y: { title: { display: true, text: ylabel, color: col, font: { family: 'Share Tech Mono', size: 9 } }, ticks: { color: col, font: { family: 'Share Tech Mono', size: 8 } }, grid: { color: 'rgba(30,58,79,0.4)' } }
-  }
+const Wds=ds(sol.Ws),Xds=ds(sol.Xs),pds=ds(sol.ps),Tds=ds(sol.Ts),Xeds=ds(sol.Xes);
+
+// ─── PLOT 1: Conversion (X blue, Xe red-dashed) — mirrors ax1 ───────────────────
+new Chart(document.getElementById('plot-conv').getContext('2d'),{
+  type:'line',
+  data:{labels:Wds.map(w=>w.toFixed(0)),datasets:[
+    {label:'Actual Conversion (X)', data:Xds, borderColor:'#00d4ff',borderWidth:2,  pointRadius:0,tension:0.3},
+    {label:'Equilibrium Conversion (Xe)',data:Xeds,borderColor:'#ff4757',borderWidth:2,pointRadius:0,tension:0.3,borderDash:[6,3]}
+  ]},
+  options:{responsive:true,animation:{duration:2000,easing:'easeInOutQuart'},
+    plugins:{legend:{labels:{color:'#c8d8e8',font:{family:mono,size:9}}},tooltip:{...tt}},
+    scales:{
+      x:{title:{display:true,text:'Catalyst Weight, W (kg)',color:'#5a7a8a',font:{family:mono,size:9}},ticks:{color:'#5a7a8a',font:{family:mono,size:8},maxTicksLimit:6},grid:{color:'rgba(30,58,79,.4)'}},
+      y:{title:{display:true,text:'Conversion',color:'#5a7a8a',font:{family:mono,size:9}},ticks:{color:'#5a7a8a',font:{family:mono,size:8}},grid:{color:'rgba(30,58,79,.4)'},min:0,max:1}
+    }}
 });
 
-// Plot I: Conversion
-new Chart(document.getElementById('sketch-conv').getContext('2d'), {
-  type: 'line',
-  data: {
-    labels: Wds.map(w => w.toFixed(0)),
-    datasets: [
-      { label: 'Actual X', data: Xds, borderColor: '#00ff88', borderWidth: 2, pointRadius: 0, tension: 0.3 },
-      { label: 'Eq. Xₑ',  data: Xeds, borderColor: '#00d4ff', borderWidth: 1.5, borderDash: [4,3], pointRadius: 0, tension: 0.3 }
-    ]
-  },
-  options: { ...commonOpts('W (kg)', 'Conversion', '#00ff88'), animation: { duration: 2000 } }
+// ─── PLOT 2: Temperature (black solid) — mirrors ax2 ────────────────────────────
+new Chart(document.getElementById('plot-temp').getContext('2d'),{
+  type:'line',
+  data:{labels:Wds.map(w=>w.toFixed(0)),datasets:[
+    {label:'Temperature (K)',data:Tds,borderColor:'#c8d8e8',borderWidth:2,pointRadius:0,tension:0.3}
+  ]},
+  options:{responsive:true,animation:{duration:2000,delay:200,easing:'easeInOutQuart'},
+    plugins:{legend:{labels:{color:'#c8d8e8',font:{family:mono,size:9}}},tooltip:{...tt}},
+    scales:{
+      x:{title:{display:true,text:'Catalyst Weight, W (kg)',color:'#5a7a8a',font:{family:mono,size:9}},ticks:{color:'#5a7a8a',font:{family:mono,size:8},maxTicksLimit:6},grid:{color:'rgba(30,58,79,.4)'}},
+      y:{title:{display:true,text:'Temperature (K)',color:'#c8d8e8',font:{family:mono,size:9}},ticks:{color:'#c8d8e8',font:{family:mono,size:8}},grid:{color:'rgba(30,58,79,.4)'}}
+    }}
 });
 
-// Plot II: Temperature
-new Chart(document.getElementById('sketch-temp').getContext('2d'), {
-  type: 'line',
-  data: {
-    labels: Wds.map(w => w.toFixed(0)),
-    datasets: [{ label: 'T (K)', data: Tds, borderColor: '#ffb300', borderWidth: 2, pointRadius: 0, tension: 0.3 }]
-  },
-  options: { ...commonOpts('W (kg)', 'T (K)', '#ffb300'), animation: { duration: 2000, delay: 400 } }
+// ─── PLOT 3: Dimensionless Pressure (green dash-dot) — mirrors ax3 ──────────────
+new Chart(document.getElementById('plot-press').getContext('2d'),{
+  type:'line',
+  data:{labels:Wds.map(w=>w.toFixed(0)),datasets:[
+    {label:'Pressure Drop (p = P/P₀)',data:pds,borderColor:'#00ff88',borderWidth:2,pointRadius:0,tension:0.3,borderDash:[8,3,2,3]}
+  ]},
+  options:{responsive:true,animation:{duration:2000,delay:400,easing:'easeInOutQuart'},
+    plugins:{legend:{labels:{color:'#c8d8e8',font:{family:mono,size:9}}},tooltip:{...tt}},
+    scales:{
+      x:{title:{display:true,text:'Catalyst Weight, W (kg)',color:'#5a7a8a',font:{family:mono,size:9}},ticks:{color:'#5a7a8a',font:{family:mono,size:8},maxTicksLimit:6},grid:{color:'rgba(30,58,79,.4)'}},
+      y:{title:{display:true,text:'Dimensionless Pressure (p)',color:'#00ff88',font:{family:mono,size:9}},ticks:{color:'#00ff88',font:{family:mono,size:8}},grid:{color:'rgba(30,58,79,.4)'},min:0.5,max:1.02}
+    }}
 });
 
-// Plot III: Pressure
-new Chart(document.getElementById('sketch-press').getContext('2d'), {
-  type: 'line',
-  data: {
-    labels: Wds.map(w => w.toFixed(0)),
-    datasets: [{ label: 'p = P/P₀', data: pds, borderColor: '#ff4757', borderWidth: 2, pointRadius: 0, tension: 0.3 }]
-  },
-  options: { ...commonOpts('W (kg)', 'p = P/P₀', '#ff4757'), animation: { duration: 2000, delay: 800 } }
+// ─── CHART G: Q̇ (red) + X (blue-dashed) vs V — mirrors ax1 + ax2.twinx ─────────
+const rho_b=1.4;
+const Wiso=ds(solI.Ws,300),Xiso=ds(solI.Xs,300);
+const Qiso=ds(solI.Qs,300).map(q=>q/1000);
+const Viso=Wiso.map(w=>w/rho_b);
+new Chart(document.getElementById('chart-isothermal').getContext('2d'),{
+  type:'line',
+  data:{labels:Viso.map(v=>v.toFixed(0)),datasets:[
+    {label:'Cumulative Heat Removed, Q̇ (kcal/s)',data:Qiso,borderColor:'#ff4757',backgroundColor:'rgba(255,71,87,.06)',borderWidth:2.5,pointRadius:0,tension:0.3,fill:true,yAxisID:'yQ'},
+    {label:'Conversion (X)',data:Xiso,borderColor:'#00d4ff',borderWidth:2,pointRadius:0,tension:0.3,borderDash:[6,4],yAxisID:'yX'}
+  ]},
+  options:{responsive:true,animation:{duration:2200,easing:'easeInOutQuart'},
+    plugins:{legend:{labels:{color:'#c8d8e8',font:{family:mono,size:11}}},tooltip:{...tt,titleColor:'#ff4757'}},
+    scales:{
+      x:{title:{display:true,text:'Reactor Volume, V (dm³)',color:'#5a7a8a',font:{family:mono}},ticks:{color:'#5a7a8a',font:{family:mono,size:10},maxTicksLimit:8},grid:{color:gc}},
+      yQ:{position:'left', title:{display:true,text:'Cumulative Heat Removed, Q̇ (kcal/s)',color:'#ff4757',font:{family:mono}},ticks:{color:'#ff4757',font:{family:mono,size:10}},grid:{color:gc}},
+      yX:{position:'right',title:{display:true,text:'Conversion (X)',color:'#00d4ff',font:{family:mono}},ticks:{color:'#00d4ff',font:{family:mono,size:10}},grid:{display:false},min:0,max:0.22}
+    }}
 });
 
-// ─── CHART: Isothermal Q vs V ──────────────────────────────────────────────────
-const rho_b = 1.4;
-const Wiso  = downsample(solI.Ws);
-const Xiso  = downsample(solI.Xs);
-const Qiso  = downsample(solI.Qs).map(q => q / 1000); // kcal/s
-const Viso  = Wiso.map(w => w / rho_b);
-
-new Chart(document.getElementById('chart-isothermal').getContext('2d'), {
-  type: 'line',
-  data: {
-    labels: Viso.map(v => v.toFixed(0)),
-    datasets: [
-      {
-        label: 'Q̇ Removed (kcal/s)',
-        data: Qiso,
-        borderColor: '#ff4757',
-        backgroundColor: 'rgba(255,71,87,0.06)',
-        borderWidth: 2.5,
-        pointRadius: 0,
-        tension: 0.3,
-        fill: true,
-        yAxisID: 'yQ'
-      },
-      {
-        label: 'Conversion X',
-        data: Xiso,
-        borderColor: '#00d4ff',
-        borderWidth: 2,
-        borderDash: [5,4],
-        pointRadius: 0,
-        tension: 0.3,
-        yAxisID: 'yX'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    animation: { duration: 2200, easing: 'easeInOutQuart' },
-    plugins: {
-      legend: { labels: { color: '#c8d8e8', font: { family: 'Share Tech Mono', size: 11 } } },
-      tooltip: { backgroundColor: '#0d1117', borderColor: '#1e3a4f', borderWidth: 1, titleColor: '#ff4757', bodyColor: '#c8d8e8', titleFont: { family: 'Share Tech Mono' }, bodyFont: { family: 'Share Tech Mono' } }
-    },
-    scales: {
-      x: { title: { display: true, text: 'Reactor Volume V (dm³)', color: '#5a7a8a', font: { family: 'Share Tech Mono' } }, ticks: { color: '#5a7a8a', font: { family: 'Share Tech Mono', size: 10 }, maxTicksLimit: 8 }, grid: { color: 'rgba(30,58,79,0.5)' } },
-      yQ: { position: 'left', title: { display: true, text: 'Q̇ (kcal/s)', color: '#ff4757', font: { family: 'Share Tech Mono' } }, ticks: { color: '#ff4757', font: { family: 'Share Tech Mono', size: 10 } }, grid: { color: 'rgba(30,58,79,0.5)' } },
-      yX: { position: 'right', title: { display: true, text: 'X', color: '#00d4ff', font: { family: 'Share Tech Mono' } }, ticks: { color: '#00d4ff', font: { family: 'Share Tech Mono', size: 10 } }, grid: { display: false }, min: 0, max: 0.22 }
-    }
-  }
-});
+// ─── MATHJAX ────────────────────────────────────────────────────────────────────
+function runMathJax(){if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise();}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>setTimeout(runMathJax,800));}
+else{setTimeout(runMathJax,800);}
 </script>
 </body>
 </html>
