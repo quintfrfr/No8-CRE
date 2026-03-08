@@ -1,235 +1,358 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kel 1 | Reactor Design P11-8</title>
+    <title>P11-8 Solution | Reaktor Kimia</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' },
+                        dark: { 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.4);
-            --success: #10b981;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            padding: 4rem 2rem;
-            text-align: center;
-            border-bottom: 2px solid var(--accent-color);
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-
-        h1 {
-            font-weight: 700;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--accent-color);
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .card {
-            background-color: var(--surface-color);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        h2 {
-            color: var(--success);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 0.5rem;
-            margin-top: 0;
-        }
-
-        .math-block {
-            background: rgba(0,0,0,0.2);
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 1.5rem 0;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        p {
-            color: var(--text-secondary);
-        }
-
-        strong {
-            color: var(--text-primary);
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color); 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--surface-color); 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color); 
-        }
-
-        .chat-quote {
-            font-style: italic;
-            background: rgba(16, 185, 129, 0.1);
-            border-left: 4px solid var(--success);
-            padding: 1rem;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 2rem;
-        }
+        body { background-color: #0f172a; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .math-block { overflow-x: auto; padding: 1rem 0; }
+        h2 { color: #38bdf8; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem; }
     </style>
 </head>
-<body>
+<body class="antialiased p-6 md:p-12 max-w-5xl mx-auto">
 
-    <header>
-        <h1>Reactor Design: Problem P11-8</h1>
-        <p class="subtitle">Complete derivations and Python simulations for Adiabatic & Isothermal PBR operations. Dedicated to Kel 1 Reaktor Kimia.</p>
+    <header class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-400 mb-4">
+            Chapter 11: Problem P11-8
+        </h1>
+        <p class="text-slate-400 text-lg">Interactive Digital Solution [cite: 4284]</p>
     </header>
 
-    <div class="container">
+    <main class="space-y-8">
         
-        <div class="chat-quote">
-            <p><strong>Dewa:</strong> "Pake html"<br>
-            <strong>Ammar:</strong> "Itu ada soal pake polymath siah euy"</p>
-            <p style="margin-bottom: 0; color: var(--accent-color);">Challenge Accepted. Here is the fully coded HTML solution, bypassing Polymath entirely with Python.</p>
-        </div>
-
-        <div class="card">
-            <h2>1. The Problem Setup (A + B ⇌ 2C)</h2>
-            <p>For the elementary gas-phase reaction, we establish our initial conditions and parameters based strictly on the textbook data (correcting the solutions manual's errors).</p>
-            <ul>
-                <li><strong>Feed Ratios:</strong> \(\Theta_A = 1\), \(\Theta_B = 2\), \(\Theta_I = 2\)</li>
-                <li><strong>Expansion Factor:</strong> \(\delta = 2 - 1 - 1 = 0 \implies \epsilon = 0\)</li>
-                <li><strong>Heat Capacities:</strong> \(\Sigma \Theta_i C_{P_i} = 20 + 2(20) + 2(18) = 96 \text{ cal/mol}\cdot\text{K}\)</li>
-                <li><strong>Delta Cp:</strong> \(\Delta C_P = 2(20) - 20 - 20 = 0\)</li>
+        <section class="glass-card p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2>Given Data [cite: 4284]</h2>
+            <div class="math-block">
+                $$A + B \rightleftharpoons 2C$$ [cite: 4285]
+            </div>
+            <ul class="list-disc list-inside space-y-2 text-slate-300">
+                <li>$F_{A0} = 5 \text{ mol/s}$ [cite: 4286]</li>
+                <li>$F_{B0} = 2 F_{A0} = 2(5 \text{ mol/s}) = 10 \text{ mol/s}$ [cite: 4287]</li>
+                <li>$F_{I0} = F_{B0} = 10 \text{ mol/s}$ [cite: 4288]</li>
+                <li>$T_{in} = 325 \text{ K}$ [cite: 4289, 4291]</li>
+                <li>$T_{coolant} = 300 \text{ K}$ [cite: 4292]</li>
+                <li>$C_{PA} = C_{PB} = C_{PC} = 20 \text{ cal/mol/K}$ [cite: 4293]</li>
+                <li>$C_{PI} = 18 \text{ cal/mol/K}$ [cite: 4294]</li>
+                <li>$E = 25 \frac{\text{kcal}}{\text{mol}}$ [cite: 4295]</li>
+                <li>$k = 0.0002 \frac{\text{dm}^6}{\text{kg mol s}} @ 300 \text{ K}$ [cite: 4296]</li>
+                <li>$\alpha = 0.00015 \text{ kg}^{-1}$ [cite: 4297]</li>
+                <li>$\Delta H_{Rx} = -20 \frac{\text{kcal}}{\text{mol}} @ 298 \text{ K}$ [cite: 4298, 4299]</li>
+                <li>$U_a = 320 \frac{\text{cal}}{s \cdot m^3 \cdot K}$ [cite: 4300, 4302]</li>
+                <li>$\dot{m}_c = 18 \text{ mol/s}$ [cite: 4303]</li>
+                <li>$K_c = 1000 @ 305 \text{ K (constant)}$ [cite: 4304, 4307]</li>
             </ul>
-        </div>
+        </section>
 
-        <div class="card">
-            <h2>2. Mole Balance & Rate Law</h2>
-            <p>Using the stoichiometric table for a gas-phase reaction with pressure drop and temperature variation, the rate of disappearance is defined as:</p>
+        <section class="glass-card p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2>(a) (b) Balances & equations [cite: 4306]</h2>
+            <p class="text-slate-300 mb-2">Mole balance: [cite: 4306]</p>
             <div class="math-block">
-                \[ -r_A' = k(T) C_{A0}^2 \left[ (1-X)(2-X) - \frac{4X^2}{K_C(T)} \right] p^2 \left(\frac{T_0}{T}\right)^2 \]
+                $$\frac{dX}{dV} = \frac{-r_A'}{F_{A0}}$$ [cite: 4308]
             </div>
-            <p>Coupled with the differential mole balance for a Packed-Bed Reactor (PBR):</p>
+            
+            <p class="text-slate-300 mt-4 mb-2">Rate law for elementary reaction: [cite: 4309]</p>
             <div class="math-block">
-                \[ \frac{dX}{dW} = \frac{-r_A'}{F_{A0}} \]
+                $$-r_A' = k(T) \left[ C_A \cdot C_B - \frac{C_C^2}{K_C(T)} \right]$$ [cite: 4313]
             </div>
-        </div>
-
-        <div class="card">
-            <h2>3. Equilibrium Conversion (\(X_e\))</h2>
-            <p>At equilibrium, \(-r_A' = 0\). The driving force (the bracketed term in the rate law) must equal zero. Expanding and solving the quadratic yields the exact formula:</p>
+            
+            <p class="text-slate-300 mt-4 mb-2">From $A + B \rightleftharpoons 2C \Rightarrow a=1, b=1, c=2$ [cite: 4312]</p>
+            
+            <p class="text-brand-400 font-semibold mt-6">Concentrations as a functions of X, P, and T: [cite: 4314, 4316]</p>
             <div class="math-block">
-                \[ X_e = \frac{\frac{3K_C}{4} - \sqrt{\left(\frac{3K_C}{4}\right)^2 - 2K_C\left(\frac{K_C}{4} - 1\right)}}{2\left(\frac{K_C}{4} - 1\right)} \]
+                $$C_j = C_{A0}(\Theta_j + \nu_j \cdot X) P \left(\frac{T_0}{T}\right)$$ [cite: 4316]
             </div>
-        </div>
-
-        <div class="card">
-            <h2>4. Part (f) - Adiabatic Simulation (Python)</h2>
-            <p>Because \(\Delta C_P = 0\), the adiabatic energy balance collapses to a beautiful linear relationship:</p>
+            <ul class="list-none space-y-2 text-slate-300 mt-2">
+                <li>$\Theta_j = \frac{F_{j0}}{F_{A0}}$ [cite: 4320]</li>
+                <li>$\nu_j =$ Coeff of j, (-) for reactants, (+) for Product [cite: 4325]</li>
+            </ul>
+            
+            <p class="text-slate-300 mt-4">Hence: [cite: 4322]</p>
             <div class="math-block">
-                \[ T = T_0 + \frac{-\Delta H_{Rx}^\circ}{\Sigma \Theta_i C_{P_i}} X = 325 + 208.33 X \]
+                $$\Theta_A = \frac{F_{A0}}{F_{A0}} = 1 ; \Theta_B = \frac{2F_{A0}}{F_{A0}} = 2 ; \Theta_C = 0 ; \Theta_I = \frac{2F_{A0}}{F_{A0}} = 2$$ [cite: 4326]
+                $$\nu_A = \nu_B = -1 ; \nu_C = 2$$ [cite: 4327]
             </div>
-            <p>Instead of Polymath, we use Python's <code>scipy.integrate.solve_ivp</code>.</p>
-<pre><code class="language-python">import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import solve_ivp
 
-# Constants
-Fa0, Ca0, T0, alpha, R = 5.0, 0.2, 325.0, 0.00015, 1.987
-
-def adiabatic_pbr(W, y):
-    X, p = y
-    T = 325.0 + 208.33 * X
-    k = 0.0002 * np.exp((25000 / R) * (1/300 - 1/T))
-    Kc = 1000 * np.exp((-20000 / R) * (1/305 - 1/T))
-    
-    ra_prime = k * (Ca0**2) * ((1 - X)*(2 - X) - (4 * X**2)/Kc) * (p**2) * ((T0/T)**2)
-    
-    dXdW = ra_prime / Fa0
-    dpdW = -alpha * (T / T0) / (2 * p)
-    return [dXdW, dpdW]
-
-# Solve
-sol = solve_ivp(adiabatic_pbr, [0, 4000], [0.0, 1.0], t_eval=np.linspace(0, 4000, 500))
-# Plotting logic goes here...</code></pre>
-        </div>
-
-        <div class="card">
-            <h2>5. Part (g) - Isothermal Operation</h2>
-            <p>For isothermal operation, \(T\) is locked at 325 K. The temperature ratio vanishes, and we must calculate the cumulative heat removed \(\dot{Q}\) over the reactor volume.</p>
+            <p class="text-slate-300 mt-4 font-semibold">Check for expansion factor ($\epsilon$) [cite: 4328]</p>
             <div class="math-block">
-                \[ \frac{d\dot{Q}}{dW} = (-r_A')(-\Delta H_{Rx}^\circ) \]
+                $$A + B \rightleftharpoons 2C$$ [cite: 4329]
+                $$\delta = 2 - (1+1) = 0, \quad \epsilon = y_{A0} \cdot \delta$$ [cite: 4330]
             </div>
-<pre><code class="language-python"># Isothermal Constants
-delta_H = -20000
-rho_b = 1.4
+            <p class="text-slate-300">For equil molar of reactant, $y_{A0} = 0.5$; but $\delta = 0$. Hence $\epsilon = 0$. [cite: 4330]</p>
+            <p class="text-emerald-400 italic mb-4">"This capture that volumetric flow rate doesn't affected by $\epsilon$, solely affected by T&P." [cite: 4331]</p>
 
-# Constants k and Kc evaluated at 325K
-k = 0.0002 * np.exp((25000 / R) * (1/300 - 1/325))
-Kc = 1000 * np.exp((-20000 / R) * (1/305 - 1/325))
+            <p class="text-slate-300">Thus we have: [cite: 4332]</p>
+            <div class="math-block">
+                $$C_A = C_{A0}(1 + (-1)X) P \left(\frac{T_0}{T}\right) = C_{A0}(1-X) P \left(\frac{T_0}{T}\right)$$ [cite: 4333]
+                $$C_B = C_{A0}(2 + (-1)X) P \left(\frac{T_0}{T}\right) = C_{A0}(2-X) P \left(\frac{T_0}{T}\right)$$ [cite: 4333]
+                $$C_C = C_{A0}(0 + (2)X) P \left(\frac{T_0}{T}\right) = C_{A0}(2X) P \left(\frac{T_0}{T}\right)$$ [cite: 4333]
+            </div>
 
-def isothermal_pbr(W, y):
-    X, p, Q_rem = y
-    
-    ra_prime = k * (Ca0**2) * ((1 - X)*(2 - X) - (4 * X**2)/Kc) * (p**2)
-    
-    dXdW = ra_prime / Fa0
-    dpdW = -alpha / (2 * p) 
-    dQdW = ra_prime * (-delta_H) 
-    return [dXdW, dpdW, dQdW]
+            <p class="text-slate-300 mt-6 font-semibold">Substitute all Concentration equations into Rate law [cite: 4334]</p>
+            <div class="math-block">
+                $$-r_A' = k(T) \left[ C_A C_B - \frac{C_C^2}{K_C(T)} \right]$$ [cite: 4339]
+                $$= k(T) \left[ C_{A0}(1-X) P \left(\frac{T_0}{T}\right) \cdot C_{A0}(2-X) P \left(\frac{T_0}{T}\right) - \frac{C_{A0}^2 \cdot 4X^2 \cdot P^2 (T_0/T)^2}{K_C(T)} \right]$$ [cite: 4340, 4341]
+                $$= k(T) C_{A0}^2 \left[ (1-X)(2-X) - \frac{4X^2}{K_C(T)} \right] P^2 \left(\frac{T_0}{T}\right)^2$$ [cite: 4342]
+            </div>
+            
+            <p class="text-slate-300 mt-4">Where: [cite: 4343]</p>
+            <div class="math-block text-sm">
+                $$k(T) = k_1 \cdot \exp\left[\frac{E}{R} \left(\frac{1}{T_1} - \frac{1}{T}\right)\right] \Rightarrow k(T) = 0.0002 \exp\left[\frac{25000}{1.987} \left(\frac{1}{300} - \frac{1}{T}\right)\right]$$ [cite: 4345, 4346]
+                $$K_C(T) = 1000 \exp\left[\frac{-20000}{1.987} \left(\frac{1}{305} - \frac{1}{T}\right)\right]$$ [cite: 4346]
+            </div>
 
-# Solve
-sol = solve_ivp(isothermal_pbr, [0, 4000], [0.0, 1.0, 0.0], t_eval=np.linspace(0, 4000, 500))
-V = sol.t / rho_b
-Q_removed_kcal = sol.y[2] / 1000
-</code></pre>
-        </div>
+            <p class="text-slate-300 mt-4">Substitute back into Rate law equation. [cite: 4347]</p>
+            <div class="math-block text-sm overflow-x-auto">
+                $$-r_A' = 0.0002 \exp\left[\frac{25000}{1.987} \left(\frac{1}{300} - \frac{1}{T}\right)\right] C_{A0}^2 \left[ (1-X)(2-X) - 4X^2 \left[ 1000 \exp\left[\frac{-20000}{1.987} \left(\frac{1}{305} - \frac{1}{T}\right)\right] \right]^{-1} \right] P^2 \left(\frac{T_0}{T}\right)^2$$ [cite: 4347, 4348]
+            </div>
+        </section>
 
-    </div>
+        <section class="glass-card p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2>(c) Equilibrium Conversion [cite: 4349]</h2>
+            <p class="text-slate-300 mb-4">@ equilibrium, $-r_A'$ would be 0, hence: [cite: 4350]</p>
+            <div class="math-block text-sm">
+                $$0 = k(T) C_{A0}^2 \left[ (1-X)(2-X) - \frac{4X^2}{K_C(T)} \right] P^2 \left(\frac{T_0}{T}\right)^2$$ [cite: 4351]
+            </div>
+            <p class="text-slate-300 mb-2">Take Bracketed LHS to 0: [cite: 4352]</p>
+            <div class="math-block">
+                $$(1-X)(2-X) - \frac{4X^2}{K_C(T)} = 0$$ [cite: 4356]
+                $$2 - 3X + X^2 - \frac{4X^2}{K_C(T)} = 0$$ [cite: 4356]
+                $$X^2 \left(1 - \frac{4}{K_C(T)}\right) - 3X + 2 = 0 \quad \bigg| \times \frac{K_C}{4}$$ [cite: 4357]
+                $$X^2 \left(\frac{K_C}{4} - 1\right) - 3X \frac{K_C}{4} + 2 \frac{K_C}{4} = 0$$ [cite: 4358]
+            </div>
+            
+            <p class="text-slate-300 mt-4 mb-2">Using quadratic formula $X = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$ [cite: 4359, 4360]</p>
+            <div class="math-block text-sm">
+                $$X_e = \frac{-\left(-\frac{3K_C}{4}\right) \pm \sqrt{\left(-\frac{3K_C}{4}\right)^2 - 4\left(\frac{K_C}{4} - 1\right) \cdot \frac{1}{2}K_C}}{2\left(\frac{K_C}{4} - 1\right)}$$ [cite: 4361, 4362]
+                $$X_e = \frac{\frac{3K_C}{4} - \sqrt{\left(\frac{3K_C}{4}\right)^2 - 2K_C\left(\frac{K_C}{4} - 1\right)}}{2\left(\frac{K_C}{4} - 1\right)}$$ [cite: 4362, 4363]
+            </div>
+            <p class="text-emerald-400 font-bold mt-2">Proven. [cite: 4364]</p>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+            <p class="text-slate-300 mt-6 italic">Plot T vs Xe shown below with excel as its Software to help us visualize the graph precisely [cite: 4365, 4366, 4367, 4368, 4369]</p>
+            
+            <div id="plot-c" class="w-full h-96 mt-6 bg-white rounded-lg overflow-hidden"></div>
+        </section>
+
+        <section class="glass-card p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2>(d). Energy Balance Parameters [cite: 4431, 4432]</h2>
+            <div class="math-block">
+                $$\Sigma \Theta_i C_{Pi} = C_{PA} + \Theta_B C_{PB} + \Theta_I C_{PI} = 20 + 2(20) + 2(18) = 96 \text{ cal/mol}\cdot\text{K}$$ [cite: 4433, 4434]
+                $$\Delta C_P = 2C_{PC} - C_{PA} - C_{PB} = 2(20) - (20+20) = 0$$ [cite: 4435]
+            </div>
+            <ul class="list-none space-y-1 text-slate-300 mt-2">
+                <li>$T_0 = 325 \text{ K} (T_{inlet})$ [cite: 4436]</li>
+                <li>$T_1 = 300 \text{ K} (T_{ref} \text{ for } k)$ [cite: 4437]</li>
+                <li>$T_2 = 305 \text{ K} (T_{ref} \text{ for } K_C)$ [cite: 4438]</li>
+            </ul>
+
+            <h2 class="mt-8">(e) Adiabatic energy Balance [cite: 4439]</h2>
+            <p class="text-slate-300 mb-2">Since $\Delta C_P = 0$, The original equation where: [cite: 4440]</p>
+            <div class="math-block">
+                $$T = T_0 + \frac{X(-\Delta H_{Rx}(T_R) + \Delta C_P(T_R - T))}{\Sigma \Theta_i C_{Pi} + X \Delta C_P}$$ [cite: 4440]
+            </div>
+            <p class="text-slate-300 mb-2">Becomes: [cite: 4441]</p>
+            <div class="math-block">
+                $$T = T_0 + \frac{X(-\Delta H_{Rx}^\circ)}{\Sigma \Theta_i C_{Pi}}$$ [cite: 4442]
+            </div>
+            <p class="text-slate-300 mb-2">Substitute value into T, hence: [cite: 4443, 4445]</p>
+            <div class="math-block">
+                $$T = 325 + \frac{20000}{96}X \quad \Rightarrow \quad T = 325 + 208.33 X$$ [cite: 4446]
+            </div>
+        </section>
+
+        <section class="glass-card p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2>(f) Plot & Analyze Xe, X, p, T vs W [cite: 4450]</h2>
+            <p class="text-slate-300 mb-2">For general dimensionless $\Delta p$ (ergun), we have [cite: 4451, 4453, 4456]</p>
+            <div class="math-block">
+                $$\frac{dp}{dW} = \frac{-\alpha}{2p} \left(\frac{T}{T_0}\right) (1+\epsilon X)$$ [cite: 4457]
+            </div>
+            <p class="text-slate-300 mb-2">We've proved that $\epsilon = 0$, hence [cite: 4458]</p>
+            <div class="math-block">
+                $$\frac{dp}{dW} = \frac{-\alpha}{2p} \left(\frac{T}{T_0}\right)$$ [cite: 4459, 4461]
+            </div>
+            <p class="text-slate-300 italic mb-6">Where $\alpha = 0.00015 \text{ kg}^{-1}$ [cite: 4462]</p>
+
+            <p class="text-emerald-400 font-semibold mb-4 text-lg">Since we can't have access to Polymath as it's a Premium app. We use python instead. The code and the result show in the Figure below. [cite: 4475, 4476]</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div id="plot-f-conv" class="w-full h-80 bg-white rounded-lg overflow-hidden shadow-lg"></div>
+                <div id="plot-f-temp" class="w-full h-80 bg-white rounded-lg overflow-hidden shadow-lg"></div>
+            </div>
+            <div id="plot-f-press" class="w-full h-80 bg-white rounded-lg overflow-hidden shadow-lg mt-6"></div>
+
+            <h3 class="text-2xl text-brand-400 font-bold mt-8 border-b border-slate-700 pb-2">Analysis [cite: 4626]</h3>
+            <ul class="list-none space-y-4 text-slate-300 mt-4">
+                <li class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                    <strong class="text-emerald-400">Pressure Profiles:</strong> Because the T is rising (which makes the gas expand and flow faster), the pressure drop actually accelerates slightly as the bed moved down. [cite: 4627, 4629, 4630]
+                </li>
+                <li class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                    <strong class="text-emerald-400">Temp. Profiles:</strong> Starting fast rapidly (above reaction is fast at the entrance). As the reaction slows down, It will flatten out (stagnant). [cite: 4628, 4631, 4632]
+                </li>
+                <li class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                    <strong class="text-emerald-400">Conversion (X & Xe):</strong> Act. X starts at 0 and rise upwards. At the same time, because the temp. is rising, the Xe starts high & drop downwards. The intersected line is the absolute max X the Adiabatic reactor could achieve. [cite: 4633, 4634, 4636]
+                </li>
+            </ul>
+        </section>
+
+        <section class="glass-card p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2>(g) Heat Removal Profile [cite: 4663]</h2>
+            <p class="text-slate-300 mb-4">To maintain isothermal operation, the heat removed by cooling jacket must perfectly match the heat generated by the reaction at every single point down the reactor. [cite: 4637]</p>
+            
+            <p class="text-slate-300 mb-2">Local Heat Generated: [cite: 4638]</p>
+            <div class="math-block">
+                $$(-r_A')(-\Delta H_{Rx}^\circ)$$ [cite: 4638]
+            </div>
+            
+            <p class="text-slate-300 mb-2">To find the cumulative heat removed ($\dot{Q}$) as the reactor moved down, set a new differential eq to add up that heat along the Cat. Weight (W): [cite: 4639, 4641, 4642]</p>
+            <div class="math-block">
+                $$\frac{d\dot{Q}}{dW} = (-r_A')(20,000 \text{ cal/mol})$$ [cite: 4644, 4647]
+            </div>
+
+            <p class="text-slate-300 mb-2">To find V: [cite: 4643]</p>
+            <div class="math-block">
+                $$W = \rho_b V \quad \Rightarrow \quad V = \frac{W}{1.4 \text{ kg/dm}^3}$$ [cite: 4646, 4659, 4662]
+            </div>
+
+            <div id="plot-g" class="w-full h-96 mt-8 bg-white rounded-lg overflow-hidden shadow-lg"></div>
+        </section>
+
+    </main>
+
+    <footer class="mt-16 text-center text-slate-500 pb-8 border-t border-slate-800 pt-8">
+        <p>Digitized directly from handwritten notes. <br><span class="text-sm italic text-slate-600">(Polymath is Premium, so we calculated this via JavaScript embedded directly in this HTML page! hahay [cite: 4475])</span></p>
+    </footer>
+
+    <script>
+        // Common Constants
+        const R = 1.987;
+        const alpha = 0.00015;
+        
+        // --- PART C: Xe vs T ---
+        let T_c = [], Xe_c = [];
+        for(let t = 300; t <= 600; t += 5) {
+            T_c.push(t);
+            let kc = 1000 * Math.exp((-20000/R) * (1/305 - 1/t));
+            let xe = (0.75*kc - Math.sqrt(Math.pow(0.75*kc, 2) - 2*kc*(0.25*kc - 1))) / (2*(0.25*kc - 1));
+            // Handle edge case where Kc is very small and formula breaks numerically
+            if(isNaN(xe) || xe < 0) xe = 0; 
+            Xe_c.push(xe);
+        }
+
+        Plotly.newPlot('plot-c', [{
+            x: T_c, y: Xe_c, 
+            mode: 'markers', 
+            marker: { color: '#0ea5e9', size: 6 },
+            name: 'Conversion (Xe)'
+        }], {
+            title: 'Graphic Conversion vs Temperature',
+            xaxis: { title: 'Temperature (K)', range: [0, 700] },
+            yaxis: { title: 'Conversion (Xe)', range: [0, 1.2] },
+            margin: { t: 40, b: 40, l: 60, r: 20 }
+        });
+
+        // --- PART F: Adiabatic Profiles (Euler Method Integration) ---
+        let W_f = [], X_f = [], Xe_f = [], p_f = [], T_f = [];
+        let x = 0, p = 1, w = 0, dw = 1;
+        
+        for(let i = 0; i <= 4000; i++) {
+            let T = 325 + 208.33 * x;
+            let k = 0.0002 * Math.exp((25000/R)*(1/300 - 1/T));
+            let Kc = 1000 * Math.exp((-20000/R)*(1/305 - 1/T));
+            
+            // Rate Law
+            let ra_prime = k * Math.pow(0.2, 2) * ((1-x)*(2-x) - (4*x*x)/Kc) * (p*p) * Math.pow(325/T, 2);
+            
+            // Store variables
+            W_f.push(w);
+            X_f.push(x);
+            p_f.push(p);
+            T_f.push(T);
+            
+            let current_xe = (0.75*Kc - Math.sqrt(Math.pow(0.75*Kc, 2) - 2*Kc*(0.25*Kc - 1))) / (2*(0.25*Kc - 1));
+            if(isNaN(current_xe) || current_xe < 0) current_xe = 0;
+            Xe_f.push(current_xe);
+            
+            // Differential steps
+            let dX = (ra_prime / 5.0) * dw;
+            let dp = (-alpha * (T / 325) / (2 * p)) * dw;
+            
+            x += dX;
+            p += dp;
+            w += dw;
+        }
+
+        Plotly.newPlot('plot-f-conv', [
+            { x: W_f, y: X_f, mode: 'lines', line: { color: 'blue', width: 2 }, name: 'Actual Conv (X)' },
+            { x: W_f, y: Xe_f, mode: 'lines', line: { color: 'red', width: 2, dash: 'dash' }, name: 'Eq Conv (Xe)' }
+        ], { title: 'Conversion Profiles', xaxis: { title: 'Catalyst Weight, W (kg)' }, yaxis: { title: 'Conversion', range: [-0.05, 1.05] }, margin: { t: 40, b: 40, l: 50, r: 20 } });
+
+        Plotly.newPlot('plot-f-temp', [{
+            x: W_f, y: T_f, mode: 'lines', line: { color: 'green', width: 2 }, name: 'Temperature (K)'
+        }], { title: 'Temperature Profile', xaxis: { title: 'Catalyst Weight, W (kg)' }, yaxis: { title: 'Temperature (K)' }, margin: { t: 40, b: 40, l: 50, r: 20 } });
+
+        Plotly.newPlot('plot-f-press', [{
+            x: W_f, y: p_f, mode: 'lines', line: { color: 'black', width: 2 }, name: 'Dimensionless Pressure (p)'
+        }], { title: 'Pressure Profile', xaxis: { title: 'Catalyst Weight, W (kg)' }, yaxis: { title: 'Dimensionless Pressure (p)' }, margin: { t: 40, b: 40, l: 50, r: 20 } });
+
+
+        // --- PART G: Isothermal Heat Removal ---
+        let V_g = [], Q_g = [], X_iso = [];
+        let x_iso = 0, p_iso = 1, w_iso = 0, q_cum = 0;
+        let T_iso = 325;
+        let k_iso = 0.0002 * Math.exp((25000/R)*(1/300 - 1/T_iso));
+        let Kc_iso = 1000 * Math.exp((-20000/R)*(1/305 - 1/T_iso));
+        
+        for(let i = 0; i <= 4000; i++) {
+            let ra_iso = k_iso * Math.pow(0.2, 2) * ((1-x_iso)*(2-x_iso) - (4*x_iso*x_iso)/Kc_iso) * (p_iso*p_iso); // T0/T = 1
+            
+            V_g.push(w_iso / 1.4); // Volume in dm3
+            Q_g.push(q_cum / 1000); // Q in kcal/s
+            X_iso.push(x_iso);
+            
+            let dX_iso = (ra_iso / 5.0) * dw;
+            let dp_iso = (-alpha / (2 * p_iso)) * dw;
+            let dQ = ra_iso * 20000 * dw; // dQ/dW = -rA * (-DeltaH)
+            
+            x_iso += dX_iso;
+            p_iso += dp_iso;
+            q_cum += dQ;
+            w_iso += dw;
+        }
+
+        Plotly.newPlot('plot-g', [
+            { x: V_g, y: Q_g, mode: 'lines', line: { color: 'red', width: 3 }, name: 'Cumulative Heat Removed (Q)' },
+            { x: V_g, y: X_iso, yaxis: 'y2', mode: 'lines', line: { color: 'blue', width: 2, dash: 'dash' }, name: 'Conversion (X)' }
+        ], {
+            title: 'Part (g): Heat Removal Profile for Isothermal Operation',
+            xaxis: { title: 'Reactor Volume, V (dm³)' },
+            yaxis: { title: 'Cumulative Heat Removed, Q (kcal/s)', titlefont: { color: 'red' }, tickfont: { color: 'red' } },
+            yaxis2: { title: 'Conversion (X)', titlefont: { color: 'blue' }, tickfont: { color: 'blue' }, overlaying: 'y', side: 'right' },
+            margin: { t: 50, b: 50, l: 60, r: 60 },
+            legend: { x: 0.1, y: 1.1, orientation: 'h' }
+        });
+
+    </script>
 </body>
 </html>
